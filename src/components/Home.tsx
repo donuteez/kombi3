@@ -8,7 +8,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   return (
     <div className="flex flex-col items-center">
       <div className="max-w-3xl text-center mb-12">
-        <h2 className="text-3xl font-bold text-blue-900 mb-4">Welcome to AutoTech Repair Management</h2>
+        <h2 className="text-3xl font-bold text-blue-900 mb-4">Tech Sheets Management</h2>
         <p className="text-gray-600 mb-8">
           A comprehensive system for technicians to manage vehicle repair information and documentation
         </p>
