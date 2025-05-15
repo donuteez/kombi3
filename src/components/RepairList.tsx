@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSupabase } from '../context/SupabaseContext';
 import { RepairSheet } from '../types';
 import { useToast } from '../hooks/useToast';
+import { ArrowUpDown } from 'lucide-react';
 
 interface RepairListProps {
   onViewDetail: (id: string) => void;
 }
+
+type SortField = 'customer_name' | 'ro_number' | 'technician_name' | 'created_at';
+type SortDirection = 'asc' | 'desc';
 
 export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
   const { supabase } = useSupabase();
@@ -13,6 +17,8 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
   const [repairs, setRepairs] = useState<RepairSheet[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortField, setSortField] = useState<SortField>('created_at');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   
   useEffect(() => {
     const fetchRepairs = async () => {
@@ -20,7 +26,7 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
         const { data, error } = await supabase
           .from('repair_sheets')
           .select('*')
-          .order('created_at', { ascending: false });
+          .order(sortField, { ascending: sortDirection === 'asc' });
           
         if (error) {
           throw new Error(`Failed to fetch repairs: ${error.message}`);
@@ -64,7 +70,18 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase, showToast]);
+  }, [supabase, showToast, sortField, sortDirection]);
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      // Toggle direction if clicking the same field
+      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Set new field and default to ascending
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
   
   const filteredRepairs = repairs.filter(repair => {
     const searchLower = searchTerm.toLowerCase();
@@ -86,6 +103,26 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
       minute: '2-digit'
     }).format(date);
   };
+
+  const SortableHeader: React.FC<{
+    field: SortField;
+    label: string;
+  }> = ({ field, label }) => (
+    <th 
+      className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
+      onClick={() => handleSort(field)}
+    >
+      <div className="flex items-center space-x-1">
+        <span>{label}</span>
+        <ArrowUpDown 
+          size={14}
+          className={`${
+            sortField === field ? 'text-blue-600' : 'text-gray-400'
+          }`}
+        />
+      </div>
+    </th>
+  );
   
   return (
     <div className="max-w-6xl mx-auto">
@@ -105,17 +142,12 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
         
         {loading ? (
           <div className="text-center py-8">
-            <svg className="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
+            <div className="animate-spin h-8 w-8 text-blue-600 mx-auto border-4 border-blue-200 rounded-full border-t-blue-600"></div>
             <p className="mt-2 text-gray-600">Loading repair sheets...</p>
           </div>
         ) : filteredRepairs.length === 0 ? (
           <div className="text-center py-8">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+            <div className="h-12 w-12 text-gray-400 mx-auto mb-4">📋</div>
             <p className="text-gray-600">
               {searchTerm ? 'No matching repair sheets found' : 'No repair sheets yet'}
             </p>
@@ -125,10 +157,10 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
             <table className="min-w-full bg-white">
               <thead className="bg-gray-100 border-b">
                 <tr>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RO Number</th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technician</th>
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  <SortableHeader field="customer_name" label="Customer" />
+                  <SortableHeader field="ro_number" label="RO Number" />
+                  <SortableHeader field="technician_name" label="Technician" />
+                  <SortableHeader field="created_at" label="Date" />
                   <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mileage</th>
                   <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Has Diagnostic</th>
                   <th className="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
