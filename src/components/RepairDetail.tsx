@@ -146,7 +146,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                 <h2 className="text-xl font-bold text-gray-800">
                   RO#: {repair.ro_number}
                 </h2>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm font-bold ml-auto">
                   {formatDate(repair.created_at)}
                 </span>
               </div>
