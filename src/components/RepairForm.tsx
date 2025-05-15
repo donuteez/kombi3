@@ -6,13 +6,15 @@ import { getTechnicianName, saveTechnicianName } from '../utils/storage';
 
 interface RepairFormProps {
   onComplete: () => void;
+  editId?: string;
 }
 
-export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
+export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) => {
   const { supabase } = useSupabase();
   const { showToast } = useToast();
   
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [diagnosticFile, setDiagnosticFile] = useState<File | null>(null);
   
   // Form state
@@ -44,16 +46,77 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
     }
   });
 
-  // Load saved technician name on mount
+  // Load repair data if in edit mode
   useEffect(() => {
-    const savedTechName = getTechnicianName();
-    if (savedTechName) {
-      setForm(prev => ({
-        ...prev,
-        technician_name: savedTechName
-      }));
+    const loadRepairData = async () => {
+      if (!editId) return;
+      
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('repair_sheets')
+          .select('*')
+          .eq('id', editId)
+          .single();
+          
+        if (error) throw error;
+        
+        if (data) {
+          setForm({
+            technician_name: data.technician_name,
+            ro_number: data.ro_number,
+            customer_name: data.customer_name || '',
+            vehicle_mileage: data.vehicle_mileage?.toString() || '',
+            customer_concern: data.customer_concern || '',
+            recommendations: data.recommendations || '',
+            shop_recommendations: data.shop_recommendations || '',
+            tire_tread: {
+              lf: data.tire_tread.lf.toString(),
+              rf: data.tire_tread.rf.toString(),
+              lr: data.tire_tread.lr.toString(),
+              rr: data.tire_tread.rr.toString()
+            },
+            brake_pads: {
+              lf: data.brake_pads.lf.toString(),
+              rf: data.brake_pads.rf.toString(),
+              lr: data.brake_pads.lr.toString(),
+              rr: data.brake_pads.rr.toString()
+            },
+            tire_pressure: {
+              front_in: data.tire_pressure.front_in.toString(),
+              front_out: data.tire_pressure.front_out.toString(),
+              rear_in: data.tire_pressure.rear_in.toString(),
+              rear_out: data.tire_pressure.rear_out.toString()
+            }
+          });
+        }
+      } catch (error) {
+        showToast({
+          id: Date.now().toString(),
+          title: 'Error',
+          description: error instanceof Error ? error.message : 'Failed to load repair data',
+          type: 'error'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadRepairData();
+  }, [editId, supabase, showToast]);
+
+  // Load saved technician name on mount (only for new repairs)
+  useEffect(() => {
+    if (!editId) {
+      const savedTechName = getTechnicianName();
+      if (savedTechName) {
+        setForm(prev => ({
+          ...prev,
+          technician_name: savedTechName
+        }));
+      }
     }
-  }, []);
+  }, [editId]);
   
   // Handle text/number input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -106,8 +169,10 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
         throw new Error('Technician name and RO number are required');
       }
       
-      // Save technician name
-      saveTechnicianName(form.technician_name.trim());
+      // Save technician name (only for new repairs)
+      if (!editId) {
+        saveTechnicianName(form.technician_name.trim());
+      }
       
       // Format the data
       const formattedData = {
@@ -156,23 +221,36 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
         };
       }
       
-      // Save repair sheet data
-      const { data, error } = await supabase
-        .from('repair_sheets')
-        .insert([{ 
-          ...formattedData,
-          ...fileData
-        }])
-        .select();
+      let result;
+      if (editId) {
+        // Update existing repair sheet
+        result = await supabase
+          .from('repair_sheets')
+          .update({ 
+            ...formattedData,
+            ...(fileData && fileData) // Only include file data if a new file was uploaded
+          })
+          .eq('id', editId)
+          .select();
+      } else {
+        // Create new repair sheet
+        result = await supabase
+          .from('repair_sheets')
+          .insert([{ 
+            ...formattedData,
+            ...fileData
+          }])
+          .select();
+      }
       
-      if (error) {
-        throw new Error(`Form submission failed: ${error.message}`);
+      if (result.error) {
+        throw new Error(`Form submission failed: ${result.error.message}`);
       }
       
       showToast({
         id: Date.now().toString(),
         title: 'Success!',
-        description: 'Repair sheet has been saved',
+        description: editId ? 'Repair sheet has been updated' : 'Repair sheet has been saved',
         type: 'success'
       });
       
@@ -190,11 +268,27 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white shadow-md rounded-lg p-6 text-center">
+          <svg className="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p className="mt-2 text-gray-600">Loading repair details...</p>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="max-w-4xl mx-auto">
       <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">New Repair Sheet</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          {editId ? 'Edit Repair Sheet' : 'New Repair Sheet'}
+        </h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Technician, RO Number, and Vehicle Mileage */}
@@ -506,7 +600,14 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
           </div>
           
           {/* Submit Button */}
-          <div className="flex justify-end">
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={() => onComplete()}
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
               disabled={isSubmitting}
@@ -514,7 +615,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                 isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-blue-700'
               } transition-colors`}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Repair Sheet'}
+              {isSubmitting ? 'Submitting...' : editId ? 'Update Repair Sheet' : 'Submit Repair Sheet'}
             </button>
           </div>
         </form>
