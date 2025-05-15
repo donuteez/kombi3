@@ -197,21 +197,23 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
         <h2 className="text-2xl font-bold text-gray-800 mb-6">New Repair Sheet</h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Technician & RO Information */}
+          {/* Technician Information */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Technician Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="technician_name"
+              value={form.technician_name}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          {/* RO Number and Mileage */}
           <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Technician Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="technician_name"
-                value={form.technician_name}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 RO Number <span className="text-red-500">*</span>
@@ -223,6 +225,18 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Vehicle Mileage
+              </label>
+              <input
+                type="number"
+                name="vehicle_mileage"
+                value={form.vehicle_mileage}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -238,20 +252,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
               value={form.customer_name}
               onChange={handleChange}
               placeholder="Doe, John"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          
-          {/* Vehicle Mileage */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Vehicle Mileage
-            </label>
-            <input
-              type="number"
-              name="vehicle_mileage"
-              value={form.vehicle_mileage}
-              onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
