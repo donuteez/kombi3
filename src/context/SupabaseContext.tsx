@@ -16,8 +16,12 @@ interface SupabaseProviderProps {
 
 // The provider component that will wrap the app
 export const SupabaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
-  const supabaseUrl = 'https://firaelvdprxtyzkdfyvx.supabase.co';
-  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpcmFlbHZkcHJ4dHl6a2RmeXZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyNjE2NzMsImV4cCI6MjA2MjgzNzY3M30.bj0TJjI7VUTUnomC6rQTu-r-RPQ-Q2AZC5-XMIFcUYw';
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Supabase URL and Anon Key must be provided in environment variables');
+  }
   
   // Create the Supabase client
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
