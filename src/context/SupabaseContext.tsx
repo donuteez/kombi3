@@ -24,7 +24,12 @@ export const SupabaseProvider: React.FC<SupabaseProviderProps> = ({ children }) 
   }
   
   // Create the Supabase client
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true
+    }
+  });
   
   return (
     <SupabaseContext.Provider value={{ supabase }}>
