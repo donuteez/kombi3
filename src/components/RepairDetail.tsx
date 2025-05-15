@@ -142,7 +142,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
               ← Back to List
             </button>
             <h2 className="text-xl font-bold text-gray-800 mt-1">
-              Repair Sheet: {repair.ro_number}
+              RO#: {repair.ro_number}
             </h2>
           </div>
           <div className="text-sm text-gray-500">
