@@ -522,3 +522,5 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
     </div>
   );
 };
+
+export { RepairForm }
