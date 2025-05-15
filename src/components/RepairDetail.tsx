@@ -140,26 +140,20 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           >
             ← Back to List
           </button>
-          <div className="mt-2 flex justify-between items-start">
-            <div>
-              <div className="flex items-center gap-4">
-                <h2 className="text-xl font-bold text-gray-800">
-                  RO#: {repair.ro_number}
-                </h2>
-                <span className="text-sm font-bold ml-auto">
-                  {formatDate(repair.created_at)}
-                </span>
-              </div>
-              <div className="mt-1 flex items-center text-sm text-gray-600">
-                <span>{repair.customer_name || '—'}</span>
-                <span className="mx-2">•</span>
-                <span>Tech: {repair.technician_name}</span>
-                {repair.vehicle_mileage && (
-                  <>
-                    <span className="mx-2">•</span>
-                    <span>Mileage: {repair.vehicle_mileage.toLocaleString()}</span>
-                  </>
-                )}
+          <div className="mt-2">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-800">
+                RO#: {repair.ro_number}
+              </h2>
+              <span className="text-base font-bold">
+                {formatDate(repair.created_at)}
+              </span>
+            </div>
+            <div className="mt-2 flex items-center justify-between text-sm">
+              <div className="flex-1 text-xl font-bold text-gray-800">{repair.customer_name || '—'}</div>
+              <div className="flex-1 text-center">Tech: {repair.technician_name}</div>
+              <div className="flex-1 text-right">
+                {repair.vehicle_mileage && `Mileage: ${repair.vehicle_mileage.toLocaleString()}`}
               </div>
             </div>
           </div>
