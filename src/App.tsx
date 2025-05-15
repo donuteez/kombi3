@@ -25,14 +25,13 @@ function App() {
       <div className="min-h-screen bg-gray-50">
         <header className="bg-blue-900 text-white shadow-md">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-400">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 18v-6"/>
-                <path d="m8 5.3 8 3.5"/>
-                <path d="M12 4v2"/>
-              </svg>
-              <h1 className="text-xl font-bold">AutoTech Repair</h1>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="https://images.pexels.com/photos/12354653/pexels-photo-12354653.jpeg?auto=compress&w=32&h=32" 
+                alt="VW Logo" 
+                className="w-8 h-8 rounded-full"
+              />
+              <h1 className="text-xl font-bold">Kombi Haus Notes</h1>
             </div>
             <nav>
               <ul className="flex space-x-4">
@@ -79,7 +78,7 @@ function App() {
         
         <footer className="bg-gray-100 border-t border-gray-200 mt-auto">
           <div className="container mx-auto px-4 py-6 text-center text-gray-600">
-            <p>© {new Date().getFullYear()} AutoTech Repair Shop. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Kombi Haus. All rights reserved.</p>
           </div>
         </footer>
         
