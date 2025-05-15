@@ -311,7 +311,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                         name="tire_tread.lf"
                         value={form.tire_tread.lf}
                         onChange={handleChange}
-                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <span className="ml-2 text-gray-600">/32</span>
                     </div>
@@ -324,7 +324,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                         name="tire_tread.lr"
                         value={form.tire_tread.lr}
                         onChange={handleChange}
-                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <span className="ml-2 text-gray-600">/32</span>
                     </div>
@@ -339,7 +339,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                         name="tire_tread.rf"
                         value={form.tire_tread.rf}
                         onChange={handleChange}
-                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <span className="ml-2 text-gray-600">/32</span>
                     </div>
@@ -352,7 +352,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                         name="tire_tread.rr"
                         value={form.tire_tread.rr}
                         onChange={handleChange}
-                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <span className="ml-2 text-gray-600">/32</span>
                     </div>
