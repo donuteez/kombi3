@@ -1,6 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+interface FormState {
+  tire_tread: {
+    lf: number;
+    lr: number;
+    rf: number;
+    rr: number;
+  };
+  brake_pads: {
+    lf: number;
+    lr: number;
+    rf: number;
+    rr: number;
+  };
+  tire_pressure: {
+    front_in: number;
+    front_out: number;
+    rear_in: number;
+    rear_out: number;
+  };
+}
 
 function RepairForm() {
+  const [form, setForm] = useState<FormState>({
+    tire_tread: {
+      lf: 0,
+      lr: 0,
+      rf: 0,
+      rr: 0,
+    },
+    brake_pads: {
+      lf: 0,
+      lr: 0,
+      rf: 0,
+      rr: 0,
+    },
+    tire_pressure: {
+      front_in: 0,
+      front_out: 0,
+      rear_in: 0,
+      rear_out: 0,
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Form submitted:', form);
+    // Add form submission logic here
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const [section, field] = name.split('.');
+    
+    setForm(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section as keyof FormState],
+        [field]: Number(value)
+      }
+    }));
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* Measurements Grid */}
