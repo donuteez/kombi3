@@ -20,6 +20,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
   const [showFileViewer, setShowFileViewer] = useState(false);
   const [editForm, setEditForm] = useState<RepairSheet | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [newDiagnosticFile, setNewDiagnosticFile] = useState<File | null>(null);
   
   useEffect(() => {
     const fetchRepairDetail = async () => {
@@ -80,6 +81,23 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      if (file.type === 'text/plain') {
+        setNewDiagnosticFile(file);
+      } else {
+        showToast({
+          id: Date.now().toString(),
+          title: 'Invalid file type',
+          description: 'Please upload a text (.txt) file',
+          type: 'error'
+        });
+        e.target.value = '';
+      }
+    }
+  };
+
   const handleCopy = async (text: string, label: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -127,15 +145,38 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
     
     setIsSaving(true);
     try {
+      let fileData = {};
+      
+      // Handle file upload if a new file was selected
+      if (newDiagnosticFile) {
+        const filename = `${Date.now()}_${newDiagnosticFile.name}`;
+        const { data: fileUploadData, error: fileUploadError } = await supabase.storage
+          .from('diagnostic-files')
+          .upload(filename, newDiagnosticFile);
+          
+        if (fileUploadError) {
+          throw new Error(`File upload failed: ${fileUploadError.message}`);
+        }
+        
+        fileData = {
+          diagnostic_file_id: fileUploadData.path,
+          diagnostic_file_name: newDiagnosticFile.name
+        };
+      }
+
       const { error } = await supabase
         .from('repair_sheets')
-        .update(editForm)
+        .update({
+          ...editForm,
+          ...fileData
+        })
         .eq('id', repairId);
         
       if (error) throw error;
       
-      setRepair(editForm);
+      setRepair({ ...editForm, ...fileData });
       setIsEditing(false);
+      setNewDiagnosticFile(null);
       
       showToast({
         id: Date.now().toString(),
@@ -158,6 +199,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
   const handleCancel = () => {
     setEditForm(repair);
     setIsEditing(false);
+    setNewDiagnosticFile(null);
   };
   
   const formatDate = (dateString: string) => {
@@ -596,15 +638,31 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           </div>
           
           {/* Diagnostic File */}
-          {repair.diagnostic_file_id && (
-            <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-medium text-blue-900">Diagnostic File</h3>
+          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-medium text-blue-900">Diagnostic File</h3>
+                {repair.diagnostic_file_name && !isEditing && (
                   <p className="text-sm text-blue-700 mt-1">
                     {repair.diagnostic_file_name}
                   </p>
+                )}
+              </div>
+              {isEditing ? (
+                <div>
+                  <input
+                    type="file"
+                    accept=".txt"
+                    onChange={handleFileChange}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  {newDiagnosticFile && (
+                    <p className="mt-1 text-sm text-blue-600">
+                      Selected: {newDiagnosticFile.name}
+                    </p>
+                  )}
                 </div>
+              ) : repair.diagnostic_file_id ? (
                 <button
                   onClick={handleViewDiagnostic}
                   disabled={loading}
@@ -612,9 +670,11 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                 >
                   {loading ? 'Loading...' : 'View Diagnostic File'}
                 </button>
-              </div>
+              ) : (
+                <p className="text-sm text-gray-500">No diagnostic file attached</p>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
