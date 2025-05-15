@@ -186,146 +186,143 @@ export default function RepairForm() {
           </div>
         </div>
 
-        {/* Measurements Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Tire Tread */}
-          <div className="border rounded-lg p-4">
-            <h3 className="text-lg font-medium mb-4">Tire Tread</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="tire_tread_lf" className="block text-sm font-medium text-gray-700">Left Front</label>
-                <input
-                  type="number"
-                  id="tire_tread_lf"
-                  value={formData.tire_tread.lf}
-                  onChange={(e) => handleMeasurementChange('tire_tread', 'lf', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="tire_tread_rf" className="block text-sm font-medium text-gray-700">Right Front</label>
-                <input
-                  type="number"
-                  id="tire_tread_rf"
-                  value={formData.tire_tread.rf}
-                  onChange={(e) => handleMeasurementChange('tire_tread', 'rf', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="tire_tread_lr" className="block text-sm font-medium text-gray-700">Left Rear</label>
-                <input
-                  type="number"
-                  id="tire_tread_lr"
-                  value={formData.tire_tread.lr}
-                  onChange={(e) => handleMeasurementChange('tire_tread', 'lr', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="tire_tread_rr" className="block text-sm font-medium text-gray-700">Right Rear</label>
-                <input
-                  type="number"
-                  id="tire_tread_rr"
-                  value={formData.tire_tread.rr}
-                  onChange={(e) => handleMeasurementChange('tire_tread', 'rr', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
+        {/* Tire Tread */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-800 mb-3">Tire Tread</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <label htmlFor="tire_tread_lf" className="block text-sm font-medium text-gray-700">Left Front</label>
+              <input
+                type="number"
+                id="tire_tread_lf"
+                value={formData.tire_tread.lf}
+                onChange={(e) => handleMeasurementChange('tire_tread', 'lf', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="tire_tread_rf" className="block text-sm font-medium text-gray-700">Right Front</label>
+              <input
+                type="number"
+                id="tire_tread_rf"
+                value={formData.tire_tread.rf}
+                onChange={(e) => handleMeasurementChange('tire_tread', 'rf', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="tire_tread_lr" className="block text-sm font-medium text-gray-700">Left Rear</label>
+              <input
+                type="number"
+                id="tire_tread_lr"
+                value={formData.tire_tread.lr}
+                onChange={(e) => handleMeasurementChange('tire_tread', 'lr', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="tire_tread_rr" className="block text-sm font-medium text-gray-700">Right Rear</label>
+              <input
+                type="number"
+                id="tire_tread_rr"
+                value={formData.tire_tread.rr}
+                onChange={(e) => handleMeasurementChange('tire_tread', 'rr', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
             </div>
           </div>
+        </div>
 
-          {/* Brake Pads */}
-          <div className="border rounded-lg p-4">
-            <h3 className="text-lg font-medium mb-4">Brake Pads</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="brake_pads_lf" className="block text-sm font-medium text-gray-700">Left Front</label>
-                <input
-                  type="number"
-                  id="brake_pads_lf"
-                  value={formData.brake_pads.lf}
-                  onChange={(e) => handleMeasurementChange('brake_pads', 'lf', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="brake_pads_rf" className="block text-sm font-medium text-gray-700">Right Front</label>
-                <input
-                  type="number"
-                  id="brake_pads_rf"
-                  value={formData.brake_pads.rf}
-                  onChange={(e) => handleMeasurementChange('brake_pads', 'rf', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="brake_pads_lr" className="block text-sm font-medium text-gray-700">Left Rear</label>
-                <input
-                  type="number"
-                  id="brake_pads_lr"
-                  value={formData.brake_pads.lr}
-                  onChange={(e) => handleMeasurementChange('brake_pads', 'lr', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="brake_pads_rr" className="block text-sm font-medium text-gray-700">Right Rear</label>
-                <input
-                  type="number"
-                  id="brake_pads_rr"
-                  value={formData.brake_pads.rr}
-                  onChange={(e) => handleMeasurementChange('brake_pads', 'rr', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
+        {/* Brake Pads */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-800 mb-3">Brake Pads</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <label htmlFor="brake_pads_lf" className="block text-sm font-medium text-gray-700">Left Front</label>
+              <input
+                type="number"
+                id="brake_pads_lf"
+                value={formData.brake_pads.lf}
+                onChange={(e) => handleMeasurementChange('brake_pads', 'lf', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="brake_pads_rf" className="block text-sm font-medium text-gray-700">Right Front</label>
+              <input
+                type="number"
+                id="brake_pads_rf"
+                value={formData.brake_pads.rf}
+                onChange={(e) => handleMeasurementChange('brake_pads', 'rf', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="brake_pads_lr" className="block text-sm font-medium text-gray-700">Left Rear</label>
+              <input
+                type="number"
+                id="brake_pads_lr"
+                value={formData.brake_pads.lr}
+                onChange={(e) => handleMeasurementChange('brake_pads', 'lr', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="brake_pads_rr" className="block text-sm font-medium text-gray-700">Right Rear</label>
+              <input
+                type="number"
+                id="brake_pads_rr"
+                value={formData.brake_pads.rr}
+                onChange={(e) => handleMeasurementChange('brake_pads', 'rr', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
             </div>
           </div>
+        </div>
 
-          {/* Tire Pressure */}
-          <div className="border rounded-lg p-4">
-            <h3 className="text-lg font-medium mb-4">Tire Pressure</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="tire_pressure_front_in" className="block text-sm font-medium text-gray-700">Front In</label>
-                <input
-                  type="number"
-                  id="tire_pressure_front_in"
-                  value={formData.tire_pressure.front_in}
-                  onChange={(e) => handleMeasurementChange('tire_pressure', 'front_in', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="tire_pressure_front_out" className="block text-sm font-medium text-gray-700">Front Out</label>
-                <input
-                  type="number"
-                  id="tire_pressure_front_out"
-                  value={formData.tire_pressure.front_out}
-                  onChange={(e) => handleMeasurementChange('tire_pressure', 'front_out', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="tire_pressure_rear_in" className="block text-sm font-medium text-gray-700">Rear In</label>
-                <input
-                  type="number"
-                  id="tire_pressure_rear_in"
-                  value={formData.tire_pressure.rear_in}
-                  onChange={(e) => handleMeasurementChange('tire_pressure', 'rear_in', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="tire_pressure_rear_out" className="block text-sm font-medium text-gray-700">Rear Out</label>
-                <input
-                  type="number"
-                  id="tire_pressure_rear_out"
-                  value={formData.tire_pressure.rear_out}
-                  onChange={(e) => handleMeasurementChange('tire_pressure', 'rear_out', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
+        {/* Tire Pressure */}
+        <div>
+          <h3 className="text-lg font-medium text-gray-800 mb-3">Tire Pressure</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <label htmlFor="tire_pressure_front_in" className="block text-sm font-medium text-gray-700">Front In</label>
+              <input
+                type="number"
+                id="tire_pressure_front_in"
+                value={formData.tire_pressure.front_in}
+                onChange={(e) => handleMeasurementChange('tire_pressure', 'front_in', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="tire_pressure_front_out" className="block text-sm font-medium text-gray-700">Front Out</label>
+              <input
+                type="number"
+                id="tire_pressure_front_out"
+                value={formData.tire_pressure.front_out}
+                onChange={(e) => handleMeasurementChange('tire_pressure', 'front_out', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="tire_pressure_rear_in" className="block text-sm font-medium text-gray-700">Rear In</label>
+              <input
+                type="number"
+                id="tire_pressure_rear_in"
+                value={formData.tire_pressure.rear_in}
+                onChange={(e) => handleMeasurementChange('tire_pressure', 'rear_in', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="tire_pressure_rear_out" className="block text-sm font-medium text-gray-700">Rear Out</label>
+              <input
+                type="number"
+                id="tire_pressure_rear_out"
+                value={formData.tire_pressure.rear_out}
+                onChange={(e) => handleMeasurementChange('tire_pressure', 'rear_out', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
             </div>
           </div>
         </div>
