@@ -269,31 +269,31 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
           </div>
           
           {/* Recommendations */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Recommendations
-              </label>
-              <textarea
-                name="recommendations"
-                value={form.recommendations}
-                onChange={handleChange}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Shop Recommendations
-              </label>
-              <textarea
-                name="shop_recommendations"
-                value={form.shop_recommendations}
-                onChange={handleChange}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Recommendations
+            </label>
+            <textarea
+              name="recommendations"
+              value={form.recommendations}
+              onChange={handleChange}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
+          {/* Shop Recommendations */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Shop Recommendations
+            </label>
+            <textarea
+              name="shop_recommendations"
+              value={form.shop_recommendations}
+              onChange={handleChange}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
           
           {/* Tire Tread Measurements */}
