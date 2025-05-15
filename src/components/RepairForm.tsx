@@ -297,7 +297,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
           </div>
           
           {/* Measurements Grid */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             {/* Tire Tread Measurements */}
             <div className="border border-gray-300 rounded-lg p-4">
               <h3 className="text-lg font-medium text-gray-800 mb-4">Tire Tread</h3>
@@ -423,55 +423,70 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                 </div>
               </div>
             </div>
-          </div>
-          
-          {/* Tire Pressure Readings */}
-          <div>
-            <h3 className="text-lg font-medium text-gray-800 mb-3">Tire Pressure (PSI)</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Front In</label>
-                <input
-                  type="number"
-                  name="tire_pressure.front_in"
-                  value={form.tire_pressure.front_in}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Front Out</label>
-                <input
-                  type="number"
-                  name="tire_pressure.front_out"
-                  value={form.tire_pressure.front_out}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Rear In</label>
-                <input
-                  type="number"
-                  name="tire_pressure.rear_in"
-                  value={form.tire_pressure.rear_in}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Rear Out</label>
-                <input
-                  type="number"
-                  name="tire_pressure.rear_out"
-                  value={form.tire_pressure.rear_out}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+
+            {/* Tire Pressure Readings */}
+            <div className="border border-gray-300 rounded-lg p-4">
+              <h3 className="text-lg font-medium text-gray-800 mb-4">Tire Pressure</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">TIRE PRESSURE IN:</span>
+                  </div>
+                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
+                    <span className="text-sm font-medium text-gray-700">FRONT</span>
+                    <input
+                      type="number"
+                      name="tire_pressure.front_in"
+                      value={form.tire_pressure.front_in}
+                      onChange={handleChange}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-600">PSI</span>
+                  </div>
+                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center">
+                    <span className="text-sm font-medium text-gray-700">REAR</span>
+                    <input
+                      type="number"
+                      name="tire_pressure.rear_in"
+                      value={form.tire_pressure.rear_in}
+                      onChange={handleChange}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-600">PSI</span>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">TIRE PRESSURE OUT:</span>
+                  </div>
+                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
+                    <span className="text-sm font-medium text-gray-700">FRONT</span>
+                    <input
+                      type="number"
+                      name="tire_pressure.front_out"
+                      value={form.tire_pressure.front_out}
+                      onChange={handleChange}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-600">PSI</span>
+                  </div>
+                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center">
+                    <span className="text-sm font-medium text-gray-700">REAR</span>
+                    <input
+                      type="number"
+                      name="tire_pressure.rear_out"
+                      value={form.tire_pressure.rear_out}
+                      onChange={handleChange}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-600">PSI</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          
+
           {/* Diagnostic File Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
