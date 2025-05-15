@@ -1,424 +1,509 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { useSupabase } from '../context/SupabaseContext';
 import { useToast } from '../hooks/useToast';
-import { Upload } from 'lucide-react';
-import { uploadFile } from '../utils/storage';
+import { TireMeasurements, BrakeMeasurements, TirePressure } from '../types';
+import { getTechnicianName, saveTechnicianName } from '../utils/storage';
 
-interface TireTread {
-  lf: number;
-  rf: number;
-  lr: number;
-  rr: number;
+interface RepairFormProps {
+  onComplete: () => void;
 }
 
-interface BrakePads {
-  lf: number;
-  rf: number;
-  lr: number;
-  rr: number;
-}
-
-interface TirePressure {
-  front_in: number;
-  front_out: number;
-  rear_in: number;
-  rear_out: number;
-}
-
-interface RepairSheet {
-  technician_name: string;
-  ro_number: string;
-  vehicle_mileage?: number;
-  customer_concern?: string;
-  recommendations?: string;
-  shop_recommendations?: string;
-  tire_tread: TireTread;
-  brake_pads: BrakePads;
-  tire_pressure: TirePressure;
-  diagnostic_file_id?: string;
-  diagnostic_file_name?: string;
-  customer_name?: string;
-}
-
-export default function RepairForm() {
-  const navigate = useNavigate();
+export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
   const { supabase } = useSupabase();
-  const { toast } = useToast();
+  const { showToast } = useToast();
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  const [formData, setFormData] = useState<RepairSheet>({
+  const [diagnosticFile, setDiagnosticFile] = useState<File | null>(null);
+  
+  // Form state
+  const [form, setForm] = useState({
     technician_name: '',
     ro_number: '',
-    vehicle_mileage: undefined,
+    customer_name: '',
+    vehicle_mileage: '',
     customer_concern: '',
     recommendations: '',
     shop_recommendations: '',
-    tire_tread: { lf: 0, rf: 0, lr: 0, rr: 0 },
-    brake_pads: { lf: 0, rf: 0, lr: 0, rr: 0 },
-    tire_pressure: { front_in: 0, front_out: 0, rear_in: 0, rear_out: 0 },
-    customer_name: '',
+    tire_tread: {
+      lf: '',
+      rf: '',
+      lr: '',
+      rr: ''
+    },
+    brake_pads: {
+      lf: '',
+      rf: '',
+      lr: '',
+      rr: ''
+    },
+    tire_pressure: {
+      front_in: '',
+      front_out: '',
+      rear_in: '',
+      rear_out: ''
+    }
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  // Load saved technician name on mount
+  useEffect(() => {
+    const savedTechName = getTechnicianName();
+    if (savedTechName) {
+      setForm(prev => ({
+        ...prev,
+        technician_name: savedTechName
+      }));
+    }
+  }, []);
+  
+  // Handle text/number input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleMeasurementChange = (category: 'tire_tread' | 'brake_pads' | 'tire_pressure', field: string, value: string) => {
-    const numValue = value === '' ? 0 : Number(value);
-    setFormData(prev => ({
-      ...prev,
-      [category]: {
-        ...prev[category],
-        [field]: numValue
-      }
-    }));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
+    
+    // Handle nested properties (tire measurements, brake measurements, tire pressure)
+    if (name.includes('.')) {
+      const [category, field] = name.split('.');
+      setForm({
+        ...form,
+        [category]: {
+          ...form[category as keyof typeof form],
+          [field]: value
+        }
+      });
+    } else {
+      setForm({
+        ...form,
+        [name]: value
+      });
     }
   };
-
+  
+  // Handle file input changes
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      // Only accept text files
+      if (file.type === 'text/plain') {
+        setDiagnosticFile(file);
+      } else {
+        showToast({
+          id: Date.now().toString(),
+          title: 'Invalid file type',
+          description: 'Please upload a text (.txt) file',
+          type: 'error'
+        });
+        e.target.value = '';
+      }
+    }
+  };
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+    
     try {
-      let fileId = '';
-      let fileName = '';
-
-      if (selectedFile) {
-        const { fileId: uploadedFileId, fileName: uploadedFileName } = await uploadFile(selectedFile);
-        fileId = uploadedFileId;
-        fileName = uploadedFileName;
+      // Validate form
+      if (!form.technician_name.trim() || !form.ro_number.trim()) {
+        throw new Error('Technician name and RO number are required');
       }
-
-      const { error } = await supabase
+      
+      // Save technician name
+      saveTechnicianName(form.technician_name.trim());
+      
+      // Format the data
+      const formattedData = {
+        technician_name: form.technician_name.trim(),
+        ro_number: form.ro_number.trim(),
+        customer_name: form.customer_name.trim(),
+        vehicle_mileage: form.vehicle_mileage ? parseInt(form.vehicle_mileage) : null,
+        customer_concern: form.customer_concern.trim(),
+        recommendations: form.recommendations.trim(),
+        shop_recommendations: form.shop_recommendations.trim(),
+        tire_tread: {
+          lf: form.tire_tread.lf ? parseInt(form.tire_tread.lf) : 0,
+          rf: form.tire_tread.rf ? parseInt(form.tire_tread.rf) : 0,
+          lr: form.tire_tread.lr ? parseInt(form.tire_tread.lr) : 0,
+          rr: form.tire_tread.rr ? parseInt(form.tire_tread.rr) : 0
+        } as TireMeasurements,
+        brake_pads: {
+          lf: form.brake_pads.lf ? parseInt(form.brake_pads.lf) : 0,
+          rf: form.brake_pads.rf ? parseInt(form.brake_pads.rf) : 0,
+          lr: form.brake_pads.lr ? parseInt(form.brake_pads.lr) : 0,
+          rr: form.brake_pads.rr ? parseInt(form.brake_pads.rr) : 0
+        } as BrakeMeasurements,
+        tire_pressure: {
+          front_in: form.tire_pressure.front_in ? parseInt(form.tire_pressure.front_in) : 0,
+          front_out: form.tire_pressure.front_out ? parseInt(form.tire_pressure.front_out) : 0,
+          rear_in: form.tire_pressure.rear_in ? parseInt(form.tire_pressure.rear_in) : 0,
+          rear_out: form.tire_pressure.rear_out ? parseInt(form.tire_pressure.rear_out) : 0
+        } as TirePressure
+      };
+      
+      // Upload diagnostic file if provided
+      let fileData = null;
+      if (diagnosticFile) {
+        const filename = `${Date.now()}_${diagnosticFile.name}`;
+        const { data: fileUploadData, error: fileUploadError } = await supabase.storage
+          .from('diagnostic-files')
+          .upload(filename, diagnosticFile);
+          
+        if (fileUploadError) {
+          throw new Error(`File upload failed: ${fileUploadError.message}`);
+        }
+        
+        fileData = {
+          diagnostic_file_id: fileUploadData.path,
+          diagnostic_file_name: diagnosticFile.name
+        };
+      }
+      
+      // Save repair sheet data
+      const { data, error } = await supabase
         .from('repair_sheets')
-        .insert([{
-          ...formData,
-          diagnostic_file_id: fileId || null,
-          diagnostic_file_name: fileName || null
-        }]);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Repair sheet created successfully",
+        .insert([{ 
+          ...formattedData,
+          ...fileData
+        }])
+        .select();
+      
+      if (error) {
+        throw new Error(`Form submission failed: ${error.message}`);
+      }
+      
+      showToast({
+        id: Date.now().toString(),
+        title: 'Success!',
+        description: 'Repair sheet has been saved',
+        type: 'success'
       });
-
-      navigate('/');
+      
+      // Reset form and redirect
+      onComplete();
+      
     } catch (error) {
-      console.error('Error creating repair sheet:', error);
-      toast({
-        title: "Error",
-        description: "Failed to create repair sheet",
-        variant: "destructive",
+      showToast({
+        id: Date.now().toString(),
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'An unknown error occurred',
+        type: 'error'
       });
     } finally {
       setIsSubmitting(false);
     }
   };
-
+  
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-8">
-      <div className="space-y-6">
-        {/* Basic Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="technician_name" className="block text-sm font-medium text-gray-700">
-              Technician Name
-            </label>
-            <input
-              type="text"
-              id="technician_name"
-              name="technician_name"
-              required
-              value={formData.technician_name}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
+    <div className="max-w-4xl mx-auto">
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">New Repair Sheet</h2>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Technician, RO Number, and Vehicle Mileage */}
+          <div className="grid md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Technician Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="technician_name"
+                value={form.technician_name}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                RO Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="ro_number"
+                value={form.ro_number}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Vehicle Mileage
+              </label>
+              <input
+                type="number"
+                name="vehicle_mileage"
+                value={form.vehicle_mileage}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
+
+          {/* Customer Name */}
           <div>
-            <label htmlFor="ro_number" className="block text-sm font-medium text-gray-700">
-              RO Number
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Customer Name (Last, First)
             </label>
             <input
               type="text"
-              id="ro_number"
-              name="ro_number"
-              required
-              value={formData.ro_number}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="customer_name" className="block text-sm font-medium text-gray-700">
-              Customer Name
-            </label>
-            <input
-              type="text"
-              id="customer_name"
               name="customer_name"
-              value={formData.customer_name || ''}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              value={form.customer_name}
+              onChange={handleChange}
+              placeholder="Doe, John"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          
+          {/* Customer Concern */}
           <div>
-            <label htmlFor="vehicle_mileage" className="block text-sm font-medium text-gray-700">
-              Vehicle Mileage
-            </label>
-            <input
-              type="number"
-              id="vehicle_mileage"
-              name="vehicle_mileage"
-              value={formData.vehicle_mileage || ''}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
-          </div>
-        </div>
-
-        {/* Tire Tread */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-800 mb-3">Tire Tread</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <label htmlFor="tire_tread_lf" className="block text-sm font-medium text-gray-700">Left Front</label>
-              <input
-                type="number"
-                id="tire_tread_lf"
-                value={formData.tire_tread.lf}
-                onChange={(e) => handleMeasurementChange('tire_tread', 'lf', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="tire_tread_rf" className="block text-sm font-medium text-gray-700">Right Front</label>
-              <input
-                type="number"
-                id="tire_tread_rf"
-                value={formData.tire_tread.rf}
-                onChange={(e) => handleMeasurementChange('tire_tread', 'rf', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="tire_tread_lr" className="block text-sm font-medium text-gray-700">Left Rear</label>
-              <input
-                type="number"
-                id="tire_tread_lr"
-                value={formData.tire_tread.lr}
-                onChange={(e) => handleMeasurementChange('tire_tread', 'lr', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="tire_tread_rr" className="block text-sm font-medium text-gray-700">Right Rear</label>
-              <input
-                type="number"
-                id="tire_tread_rr"
-                value={formData.tire_tread.rr}
-                onChange={(e) => handleMeasurementChange('tire_tread', 'rr', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Brake Pads */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-800 mb-3">Brake Pads</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <label htmlFor="brake_pads_lf" className="block text-sm font-medium text-gray-700">Left Front</label>
-              <input
-                type="number"
-                id="brake_pads_lf"
-                value={formData.brake_pads.lf}
-                onChange={(e) => handleMeasurementChange('brake_pads', 'lf', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="brake_pads_rf" className="block text-sm font-medium text-gray-700">Right Front</label>
-              <input
-                type="number"
-                id="brake_pads_rf"
-                value={formData.brake_pads.rf}
-                onChange={(e) => handleMeasurementChange('brake_pads', 'rf', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="brake_pads_lr" className="block text-sm font-medium text-gray-700">Left Rear</label>
-              <input
-                type="number"
-                id="brake_pads_lr"
-                value={formData.brake_pads.lr}
-                onChange={(e) => handleMeasurementChange('brake_pads', 'lr', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="brake_pads_rr" className="block text-sm font-medium text-gray-700">Right Rear</label>
-              <input
-                type="number"
-                id="brake_pads_rr"
-                value={formData.brake_pads.rr}
-                onChange={(e) => handleMeasurementChange('brake_pads', 'rr', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Tire Pressure */}
-        <div>
-          <h3 className="text-lg font-medium text-gray-800 mb-3">Tire Pressure</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <label htmlFor="tire_pressure_front_in" className="block text-sm font-medium text-gray-700">Front In</label>
-              <input
-                type="number"
-                id="tire_pressure_front_in"
-                value={formData.tire_pressure.front_in}
-                onChange={(e) => handleMeasurementChange('tire_pressure', 'front_in', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="tire_pressure_front_out" className="block text-sm font-medium text-gray-700">Front Out</label>
-              <input
-                type="number"
-                id="tire_pressure_front_out"
-                value={formData.tire_pressure.front_out}
-                onChange={(e) => handleMeasurementChange('tire_pressure', 'front_out', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="tire_pressure_rear_in" className="block text-sm font-medium text-gray-700">Rear In</label>
-              <input
-                type="number"
-                id="tire_pressure_rear_in"
-                value={formData.tire_pressure.rear_in}
-                onChange={(e) => handleMeasurementChange('tire_pressure', 'rear_in', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="tire_pressure_rear_out" className="block text-sm font-medium text-gray-700">Rear Out</label>
-              <input
-                type="number"
-                id="tire_pressure_rear_out"
-                value={formData.tire_pressure.rear_out}
-                onChange={(e) => handleMeasurementChange('tire_pressure', 'rear_out', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Text Areas */}
-        <div className="space-y-6">
-          <div>
-            <label htmlFor="customer_concern" className="block text-sm font-medium text-gray-700">
-              Customer Concern
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Technician Notes Addressing Customer Concern
             </label>
             <textarea
-              id="customer_concern"
               name="customer_concern"
-              rows={4}
-              value={formData.customer_concern || ''}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              value={form.customer_concern}
+              onChange={handleChange}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          
+          {/* Recommendations */}
           <div>
-            <label htmlFor="recommendations" className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Recommendations
             </label>
             <textarea
-              id="recommendations"
               name="recommendations"
-              rows={4}
-              value={formData.recommendations || ''}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              value={form.recommendations}
+              onChange={handleChange}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          
+          {/* Kombi Haus Recommendations */}
           <div>
-            <label htmlFor="shop_recommendations" className="block text-sm font-medium text-gray-700">
-              Shop Recommendations
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Kombi Haus Recommendations
             </label>
             <textarea
-              id="shop_recommendations"
               name="shop_recommendations"
-              rows={4}
-              value={formData.shop_recommendations || ''}
-              onChange={handleInputChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              value={form.shop_recommendations}
+              onChange={handleChange}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-        </div>
-
-        {/* File Upload */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Diagnostic File
-          </label>
-          <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-            <div className="space-y-1 text-center">
-              <Upload className="mx-auto h-12 w-12 text-gray-400" />
-              <div className="flex text-sm text-gray-600">
-                <label
-                  htmlFor="file-upload"
-                  className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
-                >
-                  <span>Upload a file</span>
-                  <input
-                    id="file-upload"
-                    name="file-upload"
-                    type="file"
-                    className="sr-only"
-                    onChange={handleFileChange}
-                  />
-                </label>
-                <p className="pl-1">or drag and drop</p>
+          
+          {/* Measurements Grid */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Tire Tread Measurements */}
+            <div className="border border-gray-300 rounded-lg p-4">
+              <h3 className="text-lg font-medium text-gray-800 mb-4">Tire Tread Measurements</h3>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Front (LF)</label>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        name="tire_tread.lf"
+                        value={form.tire_tread.lf}
+                        onChange={handleChange}
+                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-gray-600">/32</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Rear (LR)</label>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        name="tire_tread.lr"
+                        value={form.tire_tread.lr}
+                        onChange={handleChange}
+                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-gray-600">/32</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Front (RF)</label>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        name="tire_tread.rf"
+                        value={form.tire_tread.rf}
+                        onChange={handleChange}
+                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-gray-600">/32</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Rear (RR)</label>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        name="tire_tread.rr"
+                        value={form.tire_tread.rr}
+                        onChange={handleChange}
+                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-gray-600">/32</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p className="text-xs text-gray-500">
-                PDF, PNG, JPG up to 10MB
-              </p>
-              {selectedFile && (
-                <p className="text-sm text-gray-500">
-                  Selected file: {selectedFile.name}
-                </p>
-              )}
+            </div>
+            
+            {/* Brake Pad Measurements */}
+            <div className="border border-gray-300 rounded-lg p-4">
+              <h3 className="text-lg font-medium text-gray-800 mb-4">Brake Pad Measurements</h3>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Front (LF)</label>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        name="brake_pads.lf"
+                        value={form.brake_pads.lf}
+                        onChange={handleChange}
+                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-gray-600">MM</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Rear (LR)</label>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        name="brake_pads.lr"
+                        value={form.brake_pads.lr}
+                        onChange={handleChange}
+                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-gray-600">MM</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Front (RF)</label>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        name="brake_pads.rf"
+                        value={form.brake_pads.rf}
+                        onChange={handleChange}
+                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-gray-600">MM</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Rear (RR)</label>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        name="brake_pads.rr"
+                        value={form.brake_pads.rr}
+                        onChange={handleChange}
+                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-gray-600">MM</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+          
+          {/* Tire Pressure Readings */}
+          <div>
+            <h3 className="text-lg font-medium text-gray-800 mb-3">Tire Pressure Readings (PSI)</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Front In</label>
+                <input
+                  type="number"
+                  name="tire_pressure.front_in"
+                  value={form.tire_pressure.front_in}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Front Out</label>
+                <input
+                  type="number"
+                  name="tire_pressure.front_out"
+                  value={form.tire_pressure.front_out}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Rear In</label>
+                <input
+                  type="number"
+                  name="tire_pressure.rear_in"
+                  value={form.tire_pressure.rear_in}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Rear Out</label>
+                <input
+                  type="number"
+                  name="tire_pressure.rear_out"
+                  value={form.tire_pressure.rear_out}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* Diagnostic File Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Diagnostic Text File
+            </label>
+            <input
+              type="file"
+              accept=".txt"
+              onChange={handleFileChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {diagnosticFile && (
+              <p className="mt-1 text-sm text-gray-500">
+                Selected file: {diagnosticFile.name}
+              </p>
+            )}
+          </div>
+          
+          {/* Submit Button */}
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`px-6 py-2 bg-blue-600 text-white rounded-md ${
+                isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-blue-700'
+              } transition-colors`}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Repair Sheet'}
+            </button>
+          </div>
+        </form>
       </div>
-
-      {/* Submit Button */}
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-        >
-          {isSubmitting ? 'Creating...' : 'Create Repair Sheet'}
-        </button>
-      </div>
-    </form>
+    </div>
   );
-}
-
-export { RepairForm }
+};
