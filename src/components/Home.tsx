@@ -21,7 +21,7 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
             </svg>
             <h3 className="text-xl font-semibold mb-2 text-gray-800">Create Repair Sheet</h3>
             <p className="text-gray-600 mb-4">
-              Submit a new repair sheet with vehicle details, customer concerns, and technician recommendations
+              
             </p>
             <button 
               onClick={() => onNavigate('form')}
