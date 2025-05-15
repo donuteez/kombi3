@@ -219,7 +219,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
             </div>
             
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">Brake Pads (mm)</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-3">Brake Pads (MM)</h3>
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="text-center">
