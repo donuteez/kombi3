@@ -21,22 +21,3 @@ export const getTechnicianName = (): string | null => {
 export const saveTechnicianName = (name: string): void => {
   localStorage.setItem(STORAGE_KEYS.TECHNICIAN, name);
 };
-
-export const uploadFile = async (file: File): Promise<{ fileId: string; fileName: string }> => {
-  try {
-    // Generate a unique file ID using timestamp and random string
-    const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 15);
-    const fileId = `${timestamp}-${randomString}`;
-    
-    // Store the original filename
-    const fileName = file.name;
-    
-    // Return the file ID and name
-    // Note: In a real application, you would typically upload the file to a storage service here
-    return { fileId, fileName };
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    throw new Error('Failed to upload file');
-  }
-};
