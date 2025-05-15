@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { Toast } from '../types';
 
 type ToastCallback = (toast: Toast) => void;
@@ -7,10 +7,10 @@ type ToastCallback = (toast: Toast) => void;
 const toastCallbacks: ToastCallback[] = [];
 
 export const useToast = () => {
-  const showToast = (toast: Toast) => {
+  const showToast = useCallback((toast: Toast) => {
     // Notify all subscribers
     toastCallbacks.forEach(callback => callback(toast));
-  };
+  }, []); // Empty dependency array since toastCallbacks is defined outside the hook
   
   return { showToast };
 };
