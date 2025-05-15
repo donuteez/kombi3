@@ -427,7 +427,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
           
           {/* Tire Pressure Readings */}
           <div>
-            <h3 className="text-lg font-medium text-gray-800 mb-3">Tire Pressure Readings (PSI)</h3>
+            <h3 className="text-lg font-medium text-gray-800 mb-3">Tire Pressure (PSI)</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Front In</label>
