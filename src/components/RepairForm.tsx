@@ -282,10 +282,10 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
             />
           </div>
           
-          {/* Shop Recommendations */}
+          {/* Kombi Haus Recommendations */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Shop Recommendations
+              Kombi Haus Recommendations
             </label>
             <textarea
               name="shop_recommendations"
