@@ -304,7 +304,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Front (LF)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Front</label>
                     <div className="flex items-center">
                       <input
                         type="number"
@@ -317,7 +317,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Rear (LR)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Rear</label>
                     <div className="flex items-center">
                       <input
                         type="number"
@@ -332,7 +332,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Front (RF)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Front</label>
                     <div className="flex items-center">
                       <input
                         type="number"
@@ -345,7 +345,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Rear (RR)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Rear</label>
                     <div className="flex items-center">
                       <input
                         type="number"
@@ -367,7 +367,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Front (LF)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Front</label>
                     <div className="flex items-center">
                       <input
                         type="number"
@@ -380,7 +380,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Rear (LR)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Left Rear</label>
                     <div className="flex items-center">
                       <input
                         type="number"
@@ -395,7 +395,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Front (RF)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Front</label>
                     <div className="flex items-center">
                       <input
                         type="number"
@@ -408,7 +408,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Rear (RR)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Right Rear</label>
                     <div className="flex items-center">
                       <input
                         type="number"
