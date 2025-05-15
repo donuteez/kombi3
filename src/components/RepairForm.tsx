@@ -257,7 +257,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
           {/* Customer Concern */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Customer Concern
+              Technician Notes Addressing Customer Concern
             </label>
             <textarea
               name="customer_concern"
