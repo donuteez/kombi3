@@ -22,7 +22,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [newDiagnosticFile, setNewDiagnosticFile] = useState<File | null>(null);
-  
+
   useEffect(() => {
     const fetchRepairDetail = async () => {
       try {
@@ -52,7 +52,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
     
     fetchRepairDetail();
   }, [repairId, supabase, showToast]);
-  
+
   const handleViewDiagnostic = async () => {
     if (!repair?.diagnostic_file_id) return;
     
@@ -117,13 +117,12 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       });
     }
   };
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!editForm) return;
     
     const { name, value } = e.target;
     
-    // Handle nested properties
     if (name.includes('.')) {
       const [category, field] = name.split('.');
       setEditForm({
@@ -140,7 +139,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       });
     }
   };
-  
+
   const handleSave = async () => {
     if (!editForm) return;
     
@@ -148,11 +147,9 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
     try {
       let fileData = {};
       
-      // Handle file upload if a new file was selected
       if (newDiagnosticFile) {
         const filename = `${Date.now()}_${newDiagnosticFile.name}`;
         
-        // Delete old file if it exists
         if (repair?.diagnostic_file_id) {
           const { error: deleteError } = await supabase.storage
             .from('diagnostic-files')
@@ -163,7 +160,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           }
         }
         
-        // Upload new file
         const { data: fileUploadData, error: fileUploadError } = await supabase.storage
           .from('diagnostic-files')
           .upload(filename, newDiagnosticFile);
@@ -217,7 +213,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
 
     setIsDeleting(true);
     try {
-      // Delete diagnostic file if it exists
       if (repair?.diagnostic_file_id) {
         const { error: deleteFileError } = await supabase.storage
           .from('diagnostic-files')
@@ -228,7 +223,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
         }
       }
 
-      // Delete repair sheet
       const { error } = await supabase
         .from('repair_sheets')
         .delete()
@@ -255,13 +249,13 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       setIsDeleting(false);
     }
   };
-  
+
   const handleCancel = () => {
     setEditForm(repair);
     setIsEditing(false);
     setNewDiagnosticFile(null);
   };
-  
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
@@ -272,7 +266,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       minute: '2-digit'
     }).format(date);
   };
-  
+
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto">
@@ -283,7 +277,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       </div>
     );
   }
-  
+
   if (!repair || !editForm) {
     return (
       <div className="max-w-4xl mx-auto">
@@ -303,7 +297,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       </div>
     );
   }
-  
+
   return (
     <div className="max-w-4xl mx-auto">
       {showFileViewer && fileContent && (
@@ -413,7 +407,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
         </div>
         
         <div className="p-6 space-y-6">
-          {/* Notes Section */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-gray-900">Notes & Recommendations</h3>
             
@@ -496,9 +489,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
             </div>
           </div>
           
-          {/* Measurements Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Tire Tread */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">Tire Tread (32nds inch)</h3>
               <div className="bg-gray-50 rounded-lg p-4">
@@ -563,7 +554,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
               </div>
             </div>
             
-            {/* Brake Pads */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">Brake Pads (MM)</h3>
               <div className="bg-gray-50 rounded-lg p-4">
@@ -628,7 +618,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
               </div>
             </div>
 
-            {/* Tire Pressure */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">Tire Pressure (PSI)</h3>
               <div className="bg-gray-50 rounded-lg p-4">
@@ -709,7 +698,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
             </div>
           </div>
           
-          {/* Diagnostic File */}
           <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
