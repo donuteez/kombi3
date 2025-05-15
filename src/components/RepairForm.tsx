@@ -360,59 +360,63 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
           </div>
           
           {/* Brake Pad Measurements */}
-          <div>
-            <h3 className="text-lg font-medium text-gray-800 mb-3">Brake Pad Measurements</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Left Front (LF)</label>
-                <div className="flex items-center">
-                  <input
-                    type="number"
-                    name="brake_pads.lf"
-                    value={form.brake_pads.lf}
-                    onChange={handleChange}
-                    className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <span className="ml-2 text-gray-600">MM</span>
+          <div className="border border-gray-300 rounded-lg p-4">
+            <h3 className="text-lg font-medium text-gray-800 mb-4">Brake Pad Measurements</h3>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Left Front (LF)</label>
+                  <div className="flex items-center">
+                    <input
+                      type="number"
+                      name="brake_pads.lf"
+                      value={form.brake_pads.lf}
+                      onChange={handleChange}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="ml-2 text-gray-600">MM</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Left Rear (LR)</label>
+                  <div className="flex items-center">
+                    <input
+                      type="number"
+                      name="brake_pads.lr"
+                      value={form.brake_pads.lr}
+                      onChange={handleChange}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="ml-2 text-gray-600">MM</span>
+                  </div>
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Right Front (RF)</label>
-                <div className="flex items-center">
-                  <input
-                    type="number"
-                    name="brake_pads.rf"
-                    value={form.brake_pads.rf}
-                    onChange={handleChange}
-                    className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <span className="ml-2 text-gray-600">MM</span>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Right Front (RF)</label>
+                  <div className="flex items-center">
+                    <input
+                      type="number"
+                      name="brake_pads.rf"
+                      value={form.brake_pads.rf}
+                      onChange={handleChange}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="ml-2 text-gray-600">MM</span>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Left Rear (LR)</label>
-                <div className="flex items-center">
-                  <input
-                    type="number"
-                    name="brake_pads.lr"
-                    value={form.brake_pads.lr}
-                    onChange={handleChange}
-                    className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <span className="ml-2 text-gray-600">MM</span>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Right Rear (RR)</label>
-                <div className="flex items-center">
-                  <input
-                    type="number"
-                    name="brake_pads.rr"
-                    value={form.brake_pads.rr}
-                    onChange={handleChange}
-                    className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <span className="ml-2 text-gray-600">MM</span>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Right Rear (RR)</label>
+                  <div className="flex items-center">
+                    <input
+                      type="number"
+                      name="brake_pads.rr"
+                      value={form.brake_pads.rr}
+                      onChange={handleChange}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="ml-2 text-gray-600">MM</span>
+                  </div>
                 </div>
               </div>
             </div>
