@@ -214,7 +214,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                RO Number <span className="text-red-500">*</span>
+                RO # <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
