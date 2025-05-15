@@ -133,67 +133,56 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       )}
       
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="border-b border-gray-200 bg-gray-50 px-6 py-4 flex items-center justify-between">
-          <div>
-            <button
-              onClick={onBack}
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
-            >
-              ← Back to List
-            </button>
-            <h2 className="text-xl font-bold text-gray-800 mt-1">
+        <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
+          <button
+            onClick={onBack}
+            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
+          >
+            ← Back to List
+          </button>
+          <div className="mt-2">
+            <h2 className="text-xl font-bold text-gray-800">
               RO#: {repair.ro_number}
             </h2>
+            <div className="mt-1 flex items-center text-sm text-gray-600">
+              <span>{repair.customer_name || '—'}</span>
+              <span className="mx-2">•</span>
+              <span>Tech: {repair.technician_name}</span>
+              {repair.vehicle_mileage && (
+                <>
+                  <span className="mx-2">•</span>
+                  <span>Mileage: {repair.vehicle_mileage.toLocaleString()}</span>
+                </>
+              )}
+            </div>
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 mt-1">
             {formatDate(repair.created_at)}
           </div>
         </div>
         
         <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 gap-6">
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">Basic Information</h3>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Technician</p>
-                  <p className="mt-1">{repair.technician_name}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">RO Number</p>
-                  <p className="mt-1">{repair.ro_number}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Customer Name</p>
-                  <p className="mt-1">{repair.customer_name || '—'}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Vehicle Mileage</p>
-                  <p className="mt-1">{repair.vehicle_mileage || '—'}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">Concerns & Recommendations</h3>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+              <h3 className="text-lg font-medium text-gray-900 mb-3">Notes & Recommendations</h3>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-4">
                 <div>
                   <p className="text-sm font-medium text-gray-500">Customer Concern</p>
-                  <p className="mt-1">{repair.customer_concern || '—'}</p>
+                  <p className="mt-1 whitespace-pre-wrap">{repair.customer_concern || '—'}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">Recommendations</p>
-                  <p className="mt-1">{repair.recommendations || '—'}</p>
+                  <p className="mt-1 whitespace-pre-wrap">{repair.recommendations || '—'}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">Shop Recommendations</p>
-                  <p className="mt-1">{repair.shop_recommendations || '—'}</p>
+                  <p className="mt-1 whitespace-pre-wrap">{repair.shop_recommendations || '—'}</p>
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">Tire Tread (32nds inch)</h3>
               <div className="bg-gray-50 rounded-lg p-4">
@@ -268,7 +257,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           </div>
           
           {repair.diagnostic_file_id && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-medium text-blue-900">Diagnostic File</h3>
