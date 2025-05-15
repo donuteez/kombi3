@@ -140,24 +140,28 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           >
             ← Back to List
           </button>
-          <div className="mt-2">
-            <h2 className="text-xl font-bold text-gray-800">
-              RO#: {repair.ro_number}
-            </h2>
-            <div className="mt-1 flex items-center text-sm text-gray-600">
-              <span>{repair.customer_name || '—'}</span>
-              <span className="mx-2">•</span>
-              <span>Tech: {repair.technician_name}</span>
-              {repair.vehicle_mileage && (
-                <>
-                  <span className="mx-2">•</span>
-                  <span>Mileage: {repair.vehicle_mileage.toLocaleString()}</span>
-                </>
-              )}
+          <div className="mt-2 flex justify-between items-start">
+            <div>
+              <div className="flex items-center gap-4">
+                <h2 className="text-xl font-bold text-gray-800">
+                  RO#: {repair.ro_number}
+                </h2>
+                <span className="text-sm text-gray-500">
+                  {formatDate(repair.created_at)}
+                </span>
+              </div>
+              <div className="mt-1 flex items-center text-sm text-gray-600">
+                <span>{repair.customer_name || '—'}</span>
+                <span className="mx-2">•</span>
+                <span>Tech: {repair.technician_name}</span>
+                {repair.vehicle_mileage && (
+                  <>
+                    <span className="mx-2">•</span>
+                    <span>Mileage: {repair.vehicle_mileage.toLocaleString()}</span>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="text-sm text-gray-500 mt-1">
-            {formatDate(repair.created_at)}
           </div>
         </div>
         
