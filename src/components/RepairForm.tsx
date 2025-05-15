@@ -249,7 +249,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
               name="customer_name"
               value={form.customer_name}
               onChange={handleChange}
-              placeholder="Doe, John"
+              placeholder="Madden, John"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -300,7 +300,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Tire Tread Measurements */}
             <div className="border border-gray-300 rounded-lg p-4">
-              <h3 className="text-lg font-medium text-gray-800 mb-4">Tire Tread Measurements</h3>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">Tire Tread</h3>
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
@@ -363,7 +363,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
             
             {/* Brake Pad Measurements */}
             <div className="border border-gray-300 rounded-lg p-4">
-              <h3 className="text-lg font-medium text-gray-800 mb-4">Brake Pad Measurements</h3>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">Brake Pads</h3>
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
