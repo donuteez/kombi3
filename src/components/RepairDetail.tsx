@@ -150,6 +150,19 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       // Handle file upload if a new file was selected
       if (newDiagnosticFile) {
         const filename = `${Date.now()}_${newDiagnosticFile.name}`;
+        
+        // Delete old file if it exists
+        if (repair?.diagnostic_file_id) {
+          const { error: deleteError } = await supabase.storage
+            .from('diagnostic-files')
+            .remove([repair.diagnostic_file_id]);
+            
+          if (deleteError) {
+            console.error('Failed to delete old file:', deleteError);
+          }
+        }
+        
+        // Upload new file
         const { data: fileUploadData, error: fileUploadError } = await supabase.storage
           .from('diagnostic-files')
           .upload(filename, newDiagnosticFile);
@@ -560,76 +573,81 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                 </div>
               </div>
             </div>
-            
+
             {/* Tire Pressure */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">Tire Pressure (PSI)</h3>
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="space-y-4">
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-2">Pressure In</p>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="text-center">
-                        <p className="text-sm font-medium text-gray-500">Front</p>
-                        {isEditing ? (
-                          <input
-                            type="number"
-                            name="tire_pressure.front_in"
-                            value={editForm.tire_pressure.front_in}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                          />
-                        ) : (
-                          <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.front_in}</p>
-                        )}
-                      </div>
-                      <div className="text-center">
-                        <p className="text-sm font-medium text-gray-500">Rear</p>
-                        {isEditing ? (
-                          <input
-                            type="number"
-                            name="tire_pressure.rear_in"
-                            value={editForm.tire_pressure.rear_in}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                          />
-                        ) : (
-                          <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.rear_in}</p>
-                        )}
-                      </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">TIRE PRESSURE IN:</span>
+                    </div>
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
+                      <span className="text-sm font-medium text-gray-700">FRONT</span>
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          name="tire_pressure.front_in"
+                          value={editForm.tire_pressure.front_in}
+                          onChange={handleInputChange}
+                          className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      ) : (
+                        <p className="text-lg font-semibold">{repair.tire_pressure.front_in}</p>
+                      )}
+                      <span className="text-sm text-gray-600">PSI</span>
+                    </div>
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center">
+                      <span className="text-sm font-medium text-gray-700">REAR</span>
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          name="tire_pressure.rear_in"
+                          value={editForm.tire_pressure.rear_in}
+                          onChange={handleInputChange}
+                          className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      ) : (
+                        <p className="text-lg font-semibold">{repair.tire_pressure.rear_in}</p>
+                      )}
+                      <span className="text-sm text-gray-600">PSI</span>
                     </div>
                   </div>
+
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-2">Pressure Out</p>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="text-center">
-                        <p className="text-sm font-medium text-gray-500">Front</p>
-                        {isEditing ? (
-                          <input
-                            type="number"
-                            name="tire_pressure.front_out"
-                            value={editForm.tire_pressure.front_out}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                          />
-                        ) : (
-                          <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.front_out}</p>
-                        )}
-                      </div>
-                      <div className="text-center">
-                        <p className="text-sm font-medium text-gray-500">Rear</p>
-                        {isEditing ? (
-                          <input
-                            type="number"
-                            name="tire_pressure.rear_out"
-                            value={editForm.tire_pressure.rear_out}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                          />
-                        ) : (
-                          <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.rear_out}</p>
-                        )}
-                      </div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">TIRE PRESSURE OUT:</span>
+                    </div>
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
+                      <span className="text-sm font-medium text-gray-700">FRONT</span>
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          name="tire_pressure.front_out"
+                          value={editForm.tire_pressure.front_out}
+                          onChange={handleInputChange}
+                          className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      ) : (
+                        <p className="text-lg font-semibold">{repair.tire_pressure.front_out}</p>
+                      )}
+                      <span className="text-sm text-gray-600">PSI</span>
+                    </div>
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center">
+                      <span className="text-sm font-medium text-gray-700">REAR</span>
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          name="tire_pressure.rear_out"
+                          value={editForm.tire_pressure.rear_out}
+                          onChange={handleInputChange}
+                          className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      ) : (
+                        <p className="text-lg font-semibold">{repair.tire_pressure.rear_out}</p>
+                      )}
+                      <span className="text-sm text-gray-600">PSI</span>
                     </div>
                   </div>
                 </div>
