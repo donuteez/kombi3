@@ -432,7 +432,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-700">TIRE PRESSURE IN:</span>
                   </div>
-                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
+                  <div className="grid grid-cols-[auto,1fr,auto] items-center gap-x-2 gap-y-4">
                     <span className="text-sm font-medium text-gray-700">FRONT</span>
                     <input
                       type="number"
@@ -442,8 +442,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                       className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-600">PSI</span>
-                  </div>
-                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center">
+                    
                     <span className="text-sm font-medium text-gray-700">REAR</span>
                     <input
                       type="number"
@@ -460,7 +459,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-700">TIRE PRESSURE OUT:</span>
                   </div>
-                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
+                  <div className="grid grid-cols-[auto,1fr,auto] items-center gap-x-2 gap-y-4">
                     <span className="text-sm font-medium text-gray-700">FRONT</span>
                     <input
                       type="number"
@@ -470,8 +469,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                       className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-600">PSI</span>
-                  </div>
-                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center">
+                    
                     <span className="text-sm font-medium text-gray-700">REAR</span>
                     <input
                       type="number"
