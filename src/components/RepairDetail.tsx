@@ -20,6 +20,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
   const [showFileViewer, setShowFileViewer] = useState(false);
   const [editForm, setEditForm] = useState<RepairSheet | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [newDiagnosticFile, setNewDiagnosticFile] = useState<File | null>(null);
   
   useEffect(() => {
@@ -208,6 +209,52 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       setIsSaving(false);
     }
   };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this repair sheet? This action cannot be undone.')) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      // Delete diagnostic file if it exists
+      if (repair?.diagnostic_file_id) {
+        const { error: deleteFileError } = await supabase.storage
+          .from('diagnostic-files')
+          .remove([repair.diagnostic_file_id]);
+
+        if (deleteFileError) {
+          console.error('Failed to delete diagnostic file:', deleteFileError);
+        }
+      }
+
+      // Delete repair sheet
+      const { error } = await supabase
+        .from('repair_sheets')
+        .delete()
+        .eq('id', repairId);
+
+      if (error) throw error;
+
+      showToast({
+        id: Date.now().toString(),
+        title: 'Success',
+        description: 'Repair sheet deleted successfully',
+        type: 'success'
+      });
+
+      onBack();
+    } catch (error) {
+      showToast({
+        id: Date.now().toString(),
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to delete repair sheet',
+        type: 'error'
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   
   const handleCancel = () => {
     setEditForm(repair);
@@ -288,14 +335,21 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                 <button
                   onClick={handleCancel}
                   className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
-                  disabled={isSaving}
+                  disabled={isSaving || isDeleting}
                 >
                   Cancel
                 </button>
                 <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
+                  disabled={isDeleting || isSaving}
+                >
+                  {isDeleting ? 'Deleting...' : 'Delete'}
+                </button>
+                <button
                   onClick={handleSave}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
-                  disabled={isSaving}
+                  disabled={isSaving || isDeleting}
                 >
                   {isSaving ? 'Saving...' : 'Save'}
                 </button>
