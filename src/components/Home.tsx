@@ -40,9 +40,9 @@ export const Home: React.FC<HomeProps> = ({ onNavigate }) => {
               <path d="M3 12h.01"/>
               <path d="M3 18h.01"/>
             </svg>
-            <h3 className="text-xl font-semibold mb-2 text-gray-800">View Repair History</h3>
+            <h3 className="text-xl font-semibold mb-2 text-gray-800">View History</h3>
             <p className="text-gray-600 mb-4">
-              Browse and search through previously submitted repair sheets and documentation
+              
             </p>
             <button 
               onClick={() => onNavigate('list')}
