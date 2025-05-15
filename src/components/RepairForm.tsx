@@ -199,3 +199,5 @@ function RepairForm() {
 }
 
 export default RepairForm;
+
+export { RepairForm }
