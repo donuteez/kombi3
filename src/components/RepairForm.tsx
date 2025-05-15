@@ -374,7 +374,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                         name="brake_pads.lf"
                         value={form.brake_pads.lf}
                         onChange={handleChange}
-                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <span className="ml-2 text-gray-600">MM</span>
                     </div>
@@ -387,7 +387,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                         name="brake_pads.lr"
                         value={form.brake_pads.lr}
                         onChange={handleChange}
-                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <span className="ml-2 text-gray-600">MM</span>
                     </div>
@@ -402,7 +402,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                         name="brake_pads.rf"
                         value={form.brake_pads.rf}
                         onChange={handleChange}
-                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <span className="ml-2 text-gray-600">MM</span>
                     </div>
@@ -415,7 +415,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete }) => {
                         name="brake_pads.rr"
                         value={form.brake_pads.rr}
                         onChange={handleChange}
-                        className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       <span className="ml-2 text-gray-600">MM</span>
                     </div>
