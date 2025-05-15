@@ -3,14 +3,15 @@ import { useSupabase } from '../context/SupabaseContext';
 import { RepairSheet } from '../types';
 import { useToast } from '../hooks/useToast';
 import { FileViewer } from './FileViewer';
-import { Copy } from 'lucide-react';
+import { Copy, PencilLine } from 'lucide-react';
 
 interface RepairDetailProps {
   repairId: string;
   onBack: () => void;
+  onEdit: (id: string) => void;
 }
 
-export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) => {
+export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack, onEdit }) => {
   const { supabase } = useSupabase();
   const { showToast } = useToast();
   const [repair, setRepair] = useState<RepairSheet | null>(null);
@@ -154,12 +155,21 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
-          <button
-            onClick={onBack}
-            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
-          >
-            ← Back to List
-          </button>
+          <div className="flex items-center justify-between">
+            <button
+              onClick={onBack}
+              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
+            >
+              ← Back to List
+            </button>
+            <button
+              onClick={() => onEdit(repair.id)}
+              className="inline-flex items-center px-3 py-2 border border-blue-600 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+            >
+              <PencilLine size={16} className="mr-2" />
+              Edit
+            </button>
+          </div>
           <div className="mt-2">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold text-gray-800">
