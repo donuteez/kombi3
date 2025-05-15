@@ -3,6 +3,7 @@ import { useSupabase } from '../context/SupabaseContext';
 import { RepairSheet } from '../types';
 import { useToast } from '../hooks/useToast';
 import { FileViewer } from './FileViewer';
+import { Copy } from 'lucide-react';
 
 interface RepairDetailProps {
   repairId: string;
@@ -72,6 +73,25 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCopy = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast({
+        id: Date.now().toString(),
+        title: 'Copied!',
+        description: `${label} copied to clipboard`,
+        type: 'success'
+      });
+    } catch (error) {
+      showToast({
+        id: Date.now().toString(),
+        title: 'Error',
+        description: 'Failed to copy text',
+        type: 'error'
+      });
     }
   };
   
@@ -165,15 +185,48 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
               <h3 className="text-lg font-medium text-gray-900 mb-3">Notes & Recommendations</h3>
               <div className="bg-gray-50 rounded-lg p-4 space-y-4">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Customer Concern</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-gray-500">Customer Concern</p>
+                    {repair.customer_concern && (
+                      <button
+                        onClick={() => handleCopy(repair.customer_concern, 'Customer concern')}
+                        className="p-1 text-gray-500 hover:text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
+                        title="Copy to clipboard"
+                      >
+                        <Copy size={16} />
+                      </button>
+                    )}
+                  </div>
                   <p className="mt-1 whitespace-pre-wrap">{repair.customer_concern || '—'}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Recommendations</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-gray-500">Recommendations</p>
+                    {repair.recommendations && (
+                      <button
+                        onClick={() => handleCopy(repair.recommendations, 'Recommendations')}
+                        className="p-1 text-gray-500 hover:text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
+                        title="Copy to clipboard"
+                      >
+                        <Copy size={16} />
+                      </button>
+                    )}
+                  </div>
                   <p className="mt-1 whitespace-pre-wrap">{repair.recommendations || '—'}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Shop Recommendations</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-gray-500">Shop Recommendations</p>
+                    {repair.shop_recommendations && (
+                      <button
+                        onClick={() => handleCopy(repair.shop_recommendations, 'Shop recommendations')}
+                        className="p-1 text-gray-500 hover:text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
+                        title="Copy to clipboard"
+                      >
+                        <Copy size={16} />
+                      </button>
+                    )}
+                  </div>
                   <p className="mt-1 whitespace-pre-wrap">{repair.shop_recommendations || '—'}</p>
                 </div>
               </div>
