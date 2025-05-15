@@ -16,6 +16,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [diagnosticFile, setDiagnosticFile] = useState<File | null>(null);
+  const [existingFileName, setExistingFileName] = useState<string | null>(null);
   
   // Form state
   const [form, setForm] = useState({
@@ -89,6 +90,10 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
               rear_out: data.tire_pressure.rear_out.toString()
             }
           });
+          
+          if (data.diagnostic_file_name) {
+            setExistingFileName(data.diagnostic_file_name);
+          }
         }
       } catch (error) {
         showToast({
@@ -586,6 +591,11 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Diagnostic Text File
             </label>
+            {existingFileName && !diagnosticFile && (
+              <p className="mb-2 text-sm text-gray-600">
+                Current file: {existingFileName}
+              </p>
+            )}
             <input
               type="file"
               accept=".txt"
