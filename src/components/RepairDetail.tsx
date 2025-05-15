@@ -3,21 +3,23 @@ import { useSupabase } from '../context/SupabaseContext';
 import { RepairSheet } from '../types';
 import { useToast } from '../hooks/useToast';
 import { FileViewer } from './FileViewer';
-import { Copy, PencilLine } from 'lucide-react';
+import { Copy } from 'lucide-react';
 
 interface RepairDetailProps {
   repairId: string;
   onBack: () => void;
-  onEdit: (id: string) => void;
 }
 
-export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack, onEdit }) => {
+export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) => {
   const { supabase } = useSupabase();
   const { showToast } = useToast();
   const [repair, setRepair] = useState<RepairSheet | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [showFileViewer, setShowFileViewer] = useState(false);
+  const [editForm, setEditForm] = useState<RepairSheet | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   
   useEffect(() => {
     const fetchRepairDetail = async () => {
@@ -33,6 +35,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack, on
         }
         
         setRepair(data);
+        setEditForm(data);
       } catch (error) {
         showToast({
           id: Date.now().toString(),
@@ -96,6 +99,67 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack, on
     }
   };
   
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (!editForm) return;
+    
+    const { name, value } = e.target;
+    
+    // Handle nested properties
+    if (name.includes('.')) {
+      const [category, field] = name.split('.');
+      setEditForm({
+        ...editForm,
+        [category]: {
+          ...editForm[category as keyof typeof editForm],
+          [field]: value === '' ? 0 : Number(value)
+        }
+      });
+    } else {
+      setEditForm({
+        ...editForm,
+        [name]: value
+      });
+    }
+  };
+  
+  const handleSave = async () => {
+    if (!editForm) return;
+    
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from('repair_sheets')
+        .update(editForm)
+        .eq('id', repairId);
+        
+      if (error) throw error;
+      
+      setRepair(editForm);
+      setIsEditing(false);
+      
+      showToast({
+        id: Date.now().toString(),
+        title: 'Success',
+        description: 'Repair sheet updated successfully',
+        type: 'success'
+      });
+    } catch (error) {
+      showToast({
+        id: Date.now().toString(),
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to update repair sheet',
+        type: 'error'
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  
+  const handleCancel = () => {
+    setEditForm(repair);
+    setIsEditing(false);
+  };
+  
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
@@ -111,23 +175,18 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack, on
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <svg className="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
+          <div className="animate-spin h-8 w-8 text-blue-600 mx-auto border-4 border-blue-200 rounded-full border-t-blue-600"></div>
           <p className="mt-2 text-gray-600">Loading repair details...</p>
         </div>
       </div>
     );
   }
   
-  if (!repair) {
+  if (!repair || !editForm) {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-red-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
+          <div className="text-red-500 text-5xl mb-4">⚠️</div>
           <h3 className="text-lg font-medium text-gray-900">Repair not found</h3>
           <p className="mt-2 text-gray-600">The repair sheet you're looking for doesn't exist or has been removed.</p>
           <div className="mt-6">
@@ -162,161 +221,381 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack, on
             >
               ← Back to List
             </button>
-            <button
-              onClick={() => onEdit(repair.id)}
-              className="inline-flex items-center px-3 py-2 border border-blue-600 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-            >
-              <PencilLine size={16} className="mr-2" />
-              Edit
-            </button>
+            {!isEditing ? (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Edit
+              </button>
+            ) : (
+              <div className="space-x-2">
+                <button
+                  onClick={handleCancel}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                  disabled={isSaving}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  disabled={isSaving}
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </button>
+              </div>
+            )}
           </div>
-          <div className="mt-2">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-800">
-                RO#: {repair.ro_number}
-              </h2>
-              <span className="text-base font-bold">
-                {formatDate(repair.created_at)}
-              </span>
+          
+          <div className="mt-4 space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">RO Number</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="ro_number"
+                    value={editForm.ro_number}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                ) : (
+                  <p className="mt-1 text-lg font-semibold">{repair.ro_number}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Date</label>
+                <p className="mt-1">{formatDate(repair.created_at)}</p>
+              </div>
             </div>
-            <div className="mt-2 flex items-center justify-between text-sm">
-              <div className="flex-1 text-xl font-bold text-gray-800">{repair.customer_name || '—'}</div>
-              <div className="flex-1 text-center">Tech: {repair.technician_name}</div>
-              <div className="flex-1 text-right">
-                {repair.vehicle_mileage && `Mileage: ${repair.vehicle_mileage.toLocaleString()}`}
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Customer Name</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="customer_name"
+                    value={editForm.customer_name || ''}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                ) : (
+                  <p className="mt-1">{repair.customer_name || '—'}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Vehicle Mileage</label>
+                {isEditing ? (
+                  <input
+                    type="number"
+                    name="vehicle_mileage"
+                    value={editForm.vehicle_mileage || ''}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                ) : (
+                  <p className="mt-1">{repair.vehicle_mileage?.toLocaleString() || '—'}</p>
+                )}
               </div>
             </div>
           </div>
         </div>
         
-        <div className="p-6">
-          <div className="grid grid-cols-1 gap-6">
+        <div className="p-6 space-y-6">
+          {/* Notes Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium text-gray-900">Notes & Recommendations</h3>
+            
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">Notes & Recommendations</h3>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-500">Customer Concern</p>
-                    {repair.customer_concern && (
-                      <button
-                        onClick={() => handleCopy(repair.customer_concern, 'Customer concern')}
-                        className="p-1 text-gray-500 hover:text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
-                        title="Copy to clipboard"
-                      >
-                        <Copy size={16} />
-                      </button>
-                    )}
-                  </div>
-                  <p className="mt-1 whitespace-pre-wrap">{repair.customer_concern || '—'}</p>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-500">Recommendations</p>
-                    {repair.recommendations && (
-                      <button
-                        onClick={() => handleCopy(repair.recommendations, 'Recommendations')}
-                        className="p-1 text-gray-500 hover:text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
-                        title="Copy to clipboard"
-                      >
-                        <Copy size={16} />
-                      </button>
-                    )}
-                  </div>
-                  <p className="mt-1 whitespace-pre-wrap">{repair.recommendations || '—'}</p>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-500">Shop Recommendations</p>
-                    {repair.shop_recommendations && (
-                      <button
-                        onClick={() => handleCopy(repair.shop_recommendations, 'Shop recommendations')}
-                        className="p-1 text-gray-500 hover:text-blue-600 rounded-full hover:bg-blue-50 transition-colors"
-                        title="Copy to clipboard"
-                      >
-                        <Copy size={16} />
-                      </button>
-                    )}
-                  </div>
-                  <p className="mt-1 whitespace-pre-wrap">{repair.shop_recommendations || '—'}</p>
-                </div>
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-medium text-gray-700">Customer Concern</label>
+                {!isEditing && repair.customer_concern && (
+                  <button
+                    onClick={() => handleCopy(repair.customer_concern, 'Customer concern')}
+                    className="p-1 text-gray-500 hover:text-blue-600"
+                    title="Copy to clipboard"
+                  >
+                    <Copy size={16} />
+                  </button>
+                )}
               </div>
+              {isEditing ? (
+                <textarea
+                  name="customer_concern"
+                  value={editForm.customer_concern || ''}
+                  onChange={handleInputChange}
+                  rows={3}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              ) : (
+                <p className="mt-1 whitespace-pre-wrap">{repair.customer_concern || '—'}</p>
+              )}
+            </div>
+            
+            <div>
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-medium text-gray-700">Recommendations</label>
+                {!isEditing && repair.recommendations && (
+                  <button
+                    onClick={() => handleCopy(repair.recommendations, 'Recommendations')}
+                    className="p-1 text-gray-500 hover:text-blue-600"
+                    title="Copy to clipboard"
+                  >
+                    <Copy size={16} />
+                  </button>
+                )}
+              </div>
+              {isEditing ? (
+                <textarea
+                  name="recommendations"
+                  value={editForm.recommendations || ''}
+                  onChange={handleInputChange}
+                  rows={3}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              ) : (
+                <p className="mt-1 whitespace-pre-wrap">{repair.recommendations || '—'}</p>
+              )}
+            </div>
+            
+            <div>
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-medium text-gray-700">Shop Recommendations</label>
+                {!isEditing && repair.shop_recommendations && (
+                  <button
+                    onClick={() => handleCopy(repair.shop_recommendations, 'Shop recommendations')}
+                    className="p-1 text-gray-500 hover:text-blue-600"
+                    title="Copy to clipboard"
+                  >
+                    <Copy size={16} />
+                  </button>
+                )}
+              </div>
+              {isEditing ? (
+                <textarea
+                  name="shop_recommendations"
+                  value={editForm.shop_recommendations || ''}
+                  onChange={handleInputChange}
+                  rows={3}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                />
+              ) : (
+                <p className="mt-1 whitespace-pre-wrap">{repair.shop_recommendations || '—'}</p>
+              )}
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          {/* Measurements Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Tire Tread */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">Tire Tread (32nds inch)</h3>
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="text-center">
                     <p className="text-sm font-medium text-gray-500">Left Front</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.tire_tread.lf}</p>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="tire_tread.lf"
+                        value={editForm.tire_tread.lf}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <p className="mt-1 text-lg font-semibold">{repair.tire_tread.lf}</p>
+                    )}
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-medium text-gray-500">Right Front</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.tire_tread.rf}</p>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="tire_tread.rf"
+                        value={editForm.tire_tread.rf}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <p className="mt-1 text-lg font-semibold">{repair.tire_tread.rf}</p>
+                    )}
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-medium text-gray-500">Left Rear</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.tire_tread.lr}</p>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="tire_tread.lr"
+                        value={editForm.tire_tread.lr}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <p className="mt-1 text-lg font-semibold">{repair.tire_tread.lr}</p>
+                    )}
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-medium text-gray-500">Right Rear</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.tire_tread.rr}</p>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="tire_tread.rr"
+                        value={editForm.tire_tread.rr}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <p className="mt-1 text-lg font-semibold">{repair.tire_tread.rr}</p>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
             
+            {/* Brake Pads */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">Brake Pads (MM)</h3>
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="text-center">
                     <p className="text-sm font-medium text-gray-500">Left Front</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.brake_pads.lf}</p>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="brake_pads.lf"
+                        value={editForm.brake_pads.lf}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.lf}</p>
+                    )}
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-medium text-gray-500">Right Front</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.brake_pads.rf}</p>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="brake_pads.rf"
+                        value={editForm.brake_pads.rf}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.rf}</p>
+                    )}
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-medium text-gray-500">Left Rear</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.brake_pads.lr}</p>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="brake_pads.lr"
+                        value={editForm.brake_pads.lr}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.lr}</p>
+                    )}
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-medium text-gray-500">Right Rear</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.brake_pads.rr}</p>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="brake_pads.rr"
+                        value={editForm.brake_pads.rr}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.rr}</p>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
             
+            {/* Tire Pressure */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">Tire Pressure (PSI)</h3>
               <div className="bg-gray-50 rounded-lg p-4">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Front In</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.front_in}</p>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 mb-2">Pressure In</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="text-center">
+                        <p className="text-sm font-medium text-gray-500">Front</p>
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            name="tire_pressure.front_in"
+                            value={editForm.tire_pressure.front_in}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          />
+                        ) : (
+                          <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.front_in}</p>
+                        )}
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm font-medium text-gray-500">Rear</p>
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            name="tire_pressure.rear_in"
+                            value={editForm.tire_pressure.rear_in}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          />
+                        ) : (
+                          <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.rear_in}</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Front Out</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.front_out}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Rear In</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.rear_in}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Rear Out</p>
-                    <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.rear_out}</p>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500 mb-2">Pressure Out</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="text-center">
+                        <p className="text-sm font-medium text-gray-500">Front</p>
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            name="tire_pressure.front_out"
+                            value={editForm.tire_pressure.front_out}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          />
+                        ) : (
+                          <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.front_out}</p>
+                        )}
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm font-medium text-gray-500">Rear</p>
+                        {isEditing ? (
+                          <input
+                            type="number"
+                            name="tire_pressure.rear_out"
+                            value={editForm.tire_pressure.rear_out}
+                            onChange={handleInputChange}
+                            className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          />
+                        ) : (
+                          <p className="mt-1 text-lg font-semibold">{repair.tire_pressure.rear_out}</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           
+          {/* Diagnostic File */}
           {repair.diagnostic_file_id && (
             <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center justify-between">

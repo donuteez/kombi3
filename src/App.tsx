@@ -7,7 +7,7 @@ import { SupabaseProvider } from './context/SupabaseContext';
 import { Toaster } from './components/ui/Toaster';
 
 // App routes
-type Route = 'home' | 'form' | 'list' | 'detail' | 'edit';
+type Route = 'home' | 'form' | 'list' | 'detail';
 
 function App() {
   const [currentRoute, setCurrentRoute] = useState<Route>('home');
@@ -67,18 +67,12 @@ function App() {
 
         <main className="container mx-auto px-4 py-8">
           {currentRoute === 'home' && <Home onNavigate={navigateTo} />}
-          {(currentRoute === 'form' || currentRoute === 'edit') && (
-            <RepairForm 
-              onComplete={() => navigateTo('list')} 
-              editId={currentRoute === 'edit' ? selectedRepairId : undefined}
-            />
-          )}
+          {currentRoute === 'form' && <RepairForm onComplete={() => navigateTo('list')} />}
           {currentRoute === 'list' && <RepairList onViewDetail={(id) => navigateTo('detail', id)} />}
           {currentRoute === 'detail' && selectedRepairId && (
             <RepairDetail 
               repairId={selectedRepairId} 
               onBack={() => navigateTo('list')}
-              onEdit={(id) => navigateTo('edit', id)}
             />
           )}
         </main>
