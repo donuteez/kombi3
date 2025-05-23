@@ -31,7 +31,7 @@ function App() {
                 alt="Mech Logo" 
                 className="w-8 h-8 rounded-full"
               />
-              <h1 className="text-xl font-bold">Kombi Haus Notes</h1>
+              <h1 className="text-xl font-bold">Mech Haus Notes</h1>
             </div>
             <nav>
               <ul className="flex space-x-4">
