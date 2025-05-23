@@ -78,7 +78,7 @@ function App() {
         
         <footer className="bg-gray-100 border-t border-gray-200 mt-auto">
           <div className="container mx-auto px-4 py-6 text-center text-gray-600">
-            <p>© {new Date().getFullYear()} Kombi Haus. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Mech Haus. All rights reserved.</p>
           </div>
         </footer>
         
