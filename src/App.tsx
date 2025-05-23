@@ -27,8 +27,8 @@ function App() {
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <img 
-                src="https://images.pexels.com/photos/12354653/pexels-photo-12354653.jpeg?auto=compress&w=32&h=32" 
-                alt="VW Logo" 
+                src="/mech.png" 
+                alt="Mech Logo" 
                 className="w-8 h-8 rounded-full"
               />
               <h1 className="text-xl font-bold">Kombi Haus Notes</h1>
