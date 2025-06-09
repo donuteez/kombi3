@@ -3,7 +3,7 @@ import { useSupabase } from '../context/SupabaseContext';
 import { RepairSheet } from '../types';
 import { useToast } from '../hooks/useToast';
 import { FileViewer } from './FileViewer';
-import { Copy } from 'lucide-react';
+import { Copy, Printer } from 'lucide-react';
 
 interface RepairDetailProps {
   repairId: string;
@@ -116,6 +116,10 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
         type: 'error'
       });
     }
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   // Handle brake pad unit toggle in edit mode
@@ -331,12 +335,21 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-900">Repair Sheet</h1>
           {!isEditing ? (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Edit
-            </button>
+            <div className="space-x-2">
+              <button
+                onClick={handlePrint}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                <Printer size={16} className="mr-2" />
+                Print
+              </button>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Edit
+              </button>
+            </div>
           ) : (
             <div className="space-x-2">
               <button
