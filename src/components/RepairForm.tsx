@@ -17,6 +17,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
   const [isLoading, setIsLoading] = useState(false);
   const [diagnosticFile, setDiagnosticFile] = useState<File | null>(null);
   const [existingFileName, setExistingFileName] = useState<string | null>(null);
+  const [brakePadUnit, setBrakePadUnit] = useState<'MM' | '%'>('MM');
   
   // Form state
   const [form, setForm] = useState({
@@ -462,7 +463,26 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
             
             {/* Brake Pad Measurements */}
             <div className="border border-gray-300 rounded-lg p-4">
-              <h3 className="text-lg font-medium text-gray-800 mb-4">Brake Pads</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-800">Brake Pads</h3>
+                <div className="flex items-center space-x-2">
+                  <span className={`text-sm font-medium ${brakePadUnit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
+                  <button
+                    type="button"
+                    onClick={() => setBrakePadUnit(brakePadUnit === 'MM' ? '%' : 'MM')}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                      brakePadUnit === '%' ? 'bg-blue-600' : 'bg-gray-200'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        brakePadUnit === '%' ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                  <span className={`text-sm font-medium ${brakePadUnit === '%' ? 'text-blue-600' : 'text-gray-500'}`}>%</span>
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
@@ -475,7 +495,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                         onChange={handleChange}
                         className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <span className="ml-2 text-gray-600">MM</span>
+                      <span className="ml-2 text-gray-600">{brakePadUnit}</span>
                     </div>
                   </div>
                   <div>
@@ -488,7 +508,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                         onChange={handleChange}
                         className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <span className="ml-2 text-gray-600">MM</span>
+                      <span className="ml-2 text-gray-600">{brakePadUnit}</span>
                     </div>
                   </div>
                 </div>
@@ -503,7 +523,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                         onChange={handleChange}
                         className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <span className="ml-2 text-gray-600">MM</span>
+                      <span className="ml-2 text-gray-600">{brakePadUnit}</span>
                     </div>
                   </div>
                   <div>
@@ -516,7 +536,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                         onChange={handleChange}
                         className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <span className="ml-2 text-gray-600">MM</span>
+                      <span className="ml-2 text-gray-600">{brakePadUnit}</span>
                     </div>
                   </div>
                 </div>
