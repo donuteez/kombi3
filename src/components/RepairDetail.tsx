@@ -544,15 +544,15 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
             </div>
           </div>
           
-          {/* Measurements Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Measurements Grid - Optimized for Print */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 print:flex print:flex-row print:gap-4 print:text-xs">
             {/* Tire Tread */}
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">Tire Tread (32nds inch)</h3>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="grid grid-cols-2 gap-3">
+            <div className="print:flex-1 print:p-2">
+              <h3 className="text-lg font-medium text-gray-900 mb-3 print:text-sm print:mb-2">Tire Tread (32nds inch)</h3>
+              <div className="bg-gray-50 rounded-lg p-4 print:p-2 print:bg-transparent print:border print:border-gray-300">
+                <div className="grid grid-cols-2 gap-3 print:gap-1">
                   <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Left Front</p>
+                    <p className="text-sm font-medium text-gray-500 print:text-xs">Left Front</p>
                     {isEditing ? (
                       <input
                         type="number"
@@ -562,11 +562,11 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.tire_tread.lf}</p>
+                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.tire_tread.lf}</p>
                     )}
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Right Front</p>
+                    <p className="text-sm font-medium text-gray-500 print:text-xs">Right Front</p>
                     {isEditing ? (
                       <input
                         type="number"
@@ -576,11 +576,11 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.tire_tread.rf}</p>
+                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.tire_tread.rf}</p>
                     )}
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Left Rear</p>
+                    <p className="text-sm font-medium text-gray-500 print:text-xs">Left Rear</p>
                     {isEditing ? (
                       <input
                         type="number"
@@ -590,11 +590,11 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.tire_tread.lr}</p>
+                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.tire_tread.lr}</p>
                     )}
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Right Rear</p>
+                    <p className="text-sm font-medium text-gray-500 print:text-xs">Right Rear</p>
                     {isEditing ? (
                       <input
                         type="number"
@@ -604,7 +604,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.tire_tread.rr}</p>
+                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.tire_tread.rr}</p>
                     )}
                   </div>
                 </div>
@@ -612,13 +612,13 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
             </div>
             
             {/* Brake Pads */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-medium text-gray-900">
+            <div className="print:flex-1 print:p-2">
+              <div className="flex items-center justify-between mb-3 print:mb-2">
+                <h3 className="text-lg font-medium text-gray-900 print:text-sm">
                   Brake Pads ({isEditing ? editForm.brake_pad_unit : repair.brake_pad_unit})
                 </h3>
                 {isEditing && (
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 print:hidden">
                     <span className={`text-sm font-medium ${editForm.brake_pad_unit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
                     <button
                       type="button"
@@ -637,10 +637,10 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                   </div>
                 )}
               </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="grid grid-cols-2 gap-3">
+              <div className="bg-gray-50 rounded-lg p-4 print:p-2 print:bg-transparent print:border print:border-gray-300">
+                <div className="grid grid-cols-2 gap-3 print:gap-1">
                   <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Left Front</p>
+                    <p className="text-sm font-medium text-gray-500 print:text-xs">Left Front</p>
                     {isEditing ? (
                       <input
                         type="number"
@@ -650,11 +650,11 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.lf} {repair.brake_pad_unit}</p>
+                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.brake_pads.lf} {repair.brake_pad_unit}</p>
                     )}
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Right Front</p>
+                    <p className="text-sm font-medium text-gray-500 print:text-xs">Right Front</p>
                     {isEditing ? (
                       <input
                         type="number"
@@ -664,11 +664,11 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.rf} {repair.brake_pad_unit}</p>
+                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.brake_pads.rf} {repair.brake_pad_unit}</p>
                     )}
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Left Rear</p>
+                    <p className="text-sm font-medium text-gray-500 print:text-xs">Left Rear</p>
                     {isEditing ? (
                       <input
                         type="number"
@@ -678,11 +678,11 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.lr} {repair.brake_pad_unit}</p>
+                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.brake_pads.lr} {repair.brake_pad_unit}</p>
                     )}
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500">Right Rear</p>
+                    <p className="text-sm font-medium text-gray-500 print:text-xs">Right Rear</p>
                     {isEditing ? (
                       <input
                         type="number"
@@ -692,7 +692,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.rr} {repair.brake_pad_unit}</p>
+                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.brake_pads.rr} {repair.brake_pad_unit}</p>
                     )}
                   </div>
                 </div>
@@ -700,16 +700,16 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
             </div>
 
             {/* Tire Pressure */}
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">Tire Pressure (PSI)</h3>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="space-y-4">
+            <div className="print:flex-1 print:p-2">
+              <h3 className="text-lg font-medium text-gray-900 mb-3 print:text-sm print:mb-2">Tire Pressure (PSI)</h3>
+              <div className="bg-gray-50 rounded-lg p-4 print:p-2 print:bg-transparent print:border print:border-gray-300">
+                <div className="space-y-4 print:space-y-2">
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">TIRE PRESSURE IN:</span>
+                    <div className="flex items-center justify-between mb-2 print:mb-1">
+                      <span className="text-sm font-medium text-gray-700 print:text-xs">TIRE PRESSURE IN:</span>
                     </div>
-                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
-                      <span className="text-sm font-medium text-gray-700">FRONT</span>
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2 print:mb-1 print:gap-1">
+                      <span className="text-sm font-medium text-gray-700 print:text-xs">FRONT</span>
                       {isEditing ? (
                         <input
                           type="number"
@@ -719,12 +719,12 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                           className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       ) : (
-                        <p className="text-lg font-semibold">{repair.tire_pressure.front_in}</p>
+                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.front_in}</p>
                       )}
-                      <span className="text-sm text-gray-600">PSI</span>
+                      <span className="text-sm text-gray-600 print:text-xs">PSI</span>
                     </div>
-                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center">
-                      <span className="text-sm font-medium text-gray-700">REAR</span>
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center print:gap-1">
+                      <span className="text-sm font-medium text-gray-700 print:text-xs">REAR</span>
                       {isEditing ? (
                         <input
                           type="number"
@@ -734,18 +734,18 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                           className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       ) : (
-                        <p className="text-lg font-semibold">{repair.tire_pressure.rear_in}</p>
+                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.rear_in}</p>
                       )}
-                      <span className="text-sm text-gray-600">PSI</span>
+                      <span className="text-sm text-gray-600 print:text-xs">PSI</span>
                     </div>
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">TIRE PRESSURE OUT:</span>
+                    <div className="flex items-center justify-between mb-2 print:mb-1">
+                      <span className="text-sm font-medium text-gray-700 print:text-xs">TIRE PRESSURE OUT:</span>
                     </div>
-                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
-                      <span className="text-sm font-medium text-gray-700">FRONT</span>
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2 print:mb-1 print:gap-1">
+                      <span className="text-sm font-medium text-gray-700 print:text-xs">FRONT</span>
                       {isEditing ? (
                         <input
                           type="number"
@@ -755,12 +755,12 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                           className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       ) : (
-                        <p className="text-lg font-semibold">{repair.tire_pressure.front_out}</p>
+                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.front_out}</p>
                       )}
-                      <span className="text-sm text-gray-600">PSI</span>
+                      <span className="text-sm text-gray-600 print:text-xs">PSI</span>
                     </div>
-                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center">
-                      <span className="text-sm font-medium text-gray-700">REAR</span>
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center print:gap-1">
+                      <span className="text-sm font-medium text-gray-700 print:text-xs">REAR</span>
                       {isEditing ? (
                         <input
                           type="number"
@@ -770,9 +770,9 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                           className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       ) : (
-                        <p className="text-lg font-semibold">{repair.tire_pressure.rear_out}</p>
+                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.rear_out}</p>
                       )}
-                      <span className="text-sm text-gray-600">PSI</span>
+                      <span className="text-sm text-gray-600 print:text-xs">PSI</span>
                     </div>
                   </div>
                 </div>
