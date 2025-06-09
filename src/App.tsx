@@ -80,7 +80,17 @@ function App() {
         
         <footer className="bg-gray-100 border-t border-gray-200 mt-auto">
           <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-            <p className="text-gray-600">© {new Date().getFullYear()} Worx Notes by D3 Networks.net</p>
+            <p className="text-gray-600">
+              © {new Date().getFullYear()} Worx Notes by{' '}
+              <a 
+                href="https://d3networks.net" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                D3 Networks.net
+              </a>
+            </p>
             <button
               onClick={() => setShowSuggestionDialog(true)}
               className="text-gray-500 hover:text-blue-600 text-sm transition-colors"
