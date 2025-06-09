@@ -3,6 +3,7 @@ import { Home } from './components/Home';
 import { RepairForm } from './components/RepairForm';
 import { RepairList } from './components/RepairList';
 import { RepairDetail } from './components/RepairDetail';
+import { SuggestionDialog } from './components/SuggestionDialog';
 import { SupabaseProvider } from './context/SupabaseContext';
 import { Toaster } from './components/ui/Toaster';
 
@@ -12,6 +13,7 @@ type Route = 'home' | 'form' | 'list' | 'detail';
 function App() {
   const [currentRoute, setCurrentRoute] = useState<Route>('home');
   const [selectedRepairId, setSelectedRepairId] = useState<string | null>(null);
+  const [showSuggestionDialog, setShowSuggestionDialog] = useState(false);
 
   const navigateTo = (route: Route, repairId?: string) => {
     setCurrentRoute(route);
@@ -77,10 +79,21 @@ function App() {
         </main>
         
         <footer className="bg-gray-100 border-t border-gray-200 mt-auto">
-          <div className="container mx-auto px-4 py-6 text-center text-gray-600">
-            <p>© {new Date().getFullYear()} Worx Notes. All rights reserved.</p>
+          <div className="container mx-auto px-4 py-6 flex justify-between items-center">
+            <p className="text-gray-600">© {new Date().getFullYear()} Worx Notes. All rights reserved.</p>
+            <button
+              onClick={() => setShowSuggestionDialog(true)}
+              className="text-gray-500 hover:text-blue-600 text-sm transition-colors"
+            >
+              I wish this page would...
+            </button>
           </div>
         </footer>
+        
+        <SuggestionDialog 
+          isOpen={showSuggestionDialog}
+          onClose={() => setShowSuggestionDialog(false)}
+        />
         
         <Toaster />
       </div>
