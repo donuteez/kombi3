@@ -36,8 +36,15 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           throw new Error(`Failed to fetch repair details: ${error.message}`);
         }
         
-        setRepair(data);
-        setEditForm(data);
+        // Ensure backward compatibility for brake pad units
+        const repairData = {
+          ...data,
+          front_brake_pad_unit: data.front_brake_pad_unit || data.brake_pad_unit || 'MM',
+          rear_brake_pad_unit: data.rear_brake_pad_unit || data.brake_pad_unit || 'MM'
+        };
+        
+        setRepair(repairData);
+        setEditForm(repairData);
       } catch (error) {
         showToast({
           id: Date.now().toString(),
@@ -122,12 +129,20 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
     window.print();
   };
 
-  // Handle brake pad unit toggle in edit mode
-  const handleBrakePadUnitToggle = () => {
+  // Handle brake pad unit toggles in edit mode
+  const handleFrontBrakePadUnitToggle = () => {
     if (!editForm) return;
     setEditForm(prev => ({
       ...prev!,
-      brake_pad_unit: prev!.brake_pad_unit === 'MM' ? '%' : 'MM'
+      front_brake_pad_unit: prev!.front_brake_pad_unit === 'MM' ? '%' : 'MM'
+    }));
+  };
+
+  const handleRearBrakePadUnitToggle = () => {
+    if (!editForm) return;
+    setEditForm(prev => ({
+      ...prev!,
+      rear_brake_pad_unit: prev!.rear_brake_pad_unit === 'MM' ? '%' : 'MM'
     }));
   };
   
@@ -613,87 +628,129 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
             
             {/* Brake Pads */}
             <div className="print:flex-1 print:p-2">
-              <div className="flex items-center justify-between mb-3 print:mb-2">
-                <h3 className="text-lg font-medium text-gray-900 print:text-sm">
-                  Brake Pads ({isEditing ? editForm.brake_pad_unit : repair.brake_pad_unit})
-                </h3>
-                {isEditing && (
-                  <div className="flex items-center space-x-2 print:hidden">
-                    <span className={`text-sm font-medium ${editForm.brake_pad_unit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
-                    <button
-                      type="button"
-                      onClick={handleBrakePadUnitToggle}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                        editForm.brake_pad_unit === '%' ? 'bg-blue-600' : 'bg-gray-200'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          editForm.brake_pad_unit === '%' ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                    <span className={`text-sm font-medium ${editForm.brake_pad_unit === '%' ? 'text-blue-600' : 'text-gray-500'}`}>%</span>
-                  </div>
-                )}
-              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-3 print:text-sm print:mb-2">Brake Pads</h3>
               <div className="bg-gray-50 rounded-lg p-4 print:p-2 print:bg-transparent print:border print:border-gray-300">
-                <div className="grid grid-cols-2 gap-3 print:gap-1">
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500 print:text-xs">Left Front</p>
-                    {isEditing ? (
-                      <input
-                        type="number"
-                        name="brake_pads.lf"
-                        value={editForm.brake_pads.lf}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      />
-                    ) : (
-                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.brake_pads.lf} {repair.brake_pad_unit}</p>
+                {/* Front Brake Pads */}
+                <div className="mb-4 print:mb-2">
+                  <div className="flex items-center justify-between mb-2 print:mb-1">
+                    <span className="text-sm font-medium text-gray-700 print:text-xs">
+                      Front ({isEditing ? editForm.front_brake_pad_unit : repair.front_brake_pad_unit})
+                    </span>
+                    {isEditing && (
+                      <div className="flex items-center space-x-1 print:hidden">
+                        <span className={`text-xs ${editForm.front_brake_pad_unit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
+                        <button
+                          type="button"
+                          onClick={handleFrontBrakePadUnitToggle}
+                          className={`relative inline-flex h-4 w-8 items-center rounded-full transition-colors focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                            editForm.front_brake_pad_unit === '%' ? 'bg-blue-600' : 'bg-gray-200'
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
+                              editForm.front_brake_pad_unit === '%' ? 'translate-x-4' : 'translate-x-0.5'
+                            }`}
+                          />
+                        </button>
+                        <span className={`text-xs ${editForm.front_brake_pad_unit === '%' ? 'text-blue-600' : 'text-gray-500'}`}>%</span>
+                      </div>
                     )}
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500 print:text-xs">Right Front</p>
-                    {isEditing ? (
-                      <input
-                        type="number"
-                        name="brake_pads.rf"
-                        value={editForm.brake_pads.rf}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      />
-                    ) : (
-                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.brake_pads.rf} {repair.brake_pad_unit}</p>
+                  <div className="grid grid-cols-2 gap-2 print:gap-1">
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 print:text-xs">LF</p>
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          name="brake_pads.lf"
+                          value={editForm.brake_pads.lf}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-16 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        />
+                      ) : (
+                        <p className="mt-1 text-sm font-semibold print:text-xs print:mt-0">
+                          {repair.brake_pads.lf} {repair.front_brake_pad_unit}
+                        </p>
+                      )}
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 print:text-xs">RF</p>
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          name="brake_pads.rf"
+                          value={editForm.brake_pads.rf}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-16 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        />
+                      ) : (
+                        <p className="mt-1 text-sm font-semibold print:text-xs print:mt-0">
+                          {repair.brake_pads.rf} {repair.front_brake_pad_unit}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rear Brake Pads */}
+                <div>
+                  <div className="flex items-center justify-between mb-2 print:mb-1">
+                    <span className="text-sm font-medium text-gray-700 print:text-xs">
+                      Rear ({isEditing ? editForm.rear_brake_pad_unit : repair.rear_brake_pad_unit})
+                    </span>
+                    {isEditing && (
+                      <div className="flex items-center space-x-1 print:hidden">
+                        <span className={`text-xs ${editForm.rear_brake_pad_unit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
+                        <button
+                          type="button"
+                          onClick={handleRearBrakePadUnitToggle}
+                          className={`relative inline-flex h-4 w-8 items-center rounded-full transition-colors focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                            editForm.rear_brake_pad_unit === '%' ? 'bg-blue-600' : 'bg-gray-200'
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
+                              editForm.rear_brake_pad_unit === '%' ? 'translate-x-4' : 'translate-x-0.5'
+                            }`}
+                          />
+                        </button>
+                        <span className={`text-xs ${editForm.rear_brake_pad_unit === '%' ? 'text-blue-600' : 'text-gray-500'}`}>%</span>
+                      </div>
                     )}
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500 print:text-xs">Left Rear</p>
-                    {isEditing ? (
-                      <input
-                        type="number"
-                        name="brake_pads.lr"
-                        value={editForm.brake_pads.lr}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      />
-                    ) : (
-                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.brake_pads.lr} {repair.brake_pad_unit}</p>
-                    )}
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-gray-500 print:text-xs">Right Rear</p>
-                    {isEditing ? (
-                      <input
-                        type="number"
-                        name="brake_pads.rr"
-                        value={editForm.brake_pads.rr}
-                        onChange={handleInputChange}
-                        className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      />
-                    ) : (
-                      <p className="mt-1 text-lg font-semibold print:text-xs print:mt-0">{repair.brake_pads.rr} {repair.brake_pad_unit}</p>
-                    )}
+                  <div className="grid grid-cols-2 gap-2 print:gap-1">
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 print:text-xs">LR</p>
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          name="brake_pads.lr"
+                          value={editForm.brake_pads.lr}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-16 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        />
+                      ) : (
+                        <p className="mt-1 text-sm font-semibold print:text-xs print:mt-0">
+                          {repair.brake_pads.lr} {repair.rear_brake_pad_unit}
+                        </p>
+                      )}
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-gray-500 print:text-xs">RR</p>
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          name="brake_pads.rr"
+                          value={editForm.brake_pads.rr}
+                          onChange={handleInputChange}
+                          className="mt-1 block w-16 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        />
+                      ) : (
+                        <p className="mt-1 text-sm font-semibold print:text-xs print:mt-0">
+                          {repair.brake_pads.rr} {repair.rear_brake_pad_unit}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

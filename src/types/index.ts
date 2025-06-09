@@ -14,7 +14,9 @@ export interface RepairSheet {
   tire_pressure: TirePressure;
   diagnostic_file_id?: string;
   diagnostic_file_name?: string;
-  brake_pad_unit: 'MM' | '%';
+  brake_pad_unit: 'MM' | '%'; // Keep for backward compatibility
+  front_brake_pad_unit: 'MM' | '%';
+  rear_brake_pad_unit: 'MM' | '%';
 }
 
 export interface TireMeasurements {
