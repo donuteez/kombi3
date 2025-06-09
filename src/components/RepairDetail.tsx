@@ -596,28 +596,30 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
             
             {/* Brake Pads */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">
-                Brake Pads ({isEditing ? editForm.brake_pad_unit : repair.brake_pad_unit})
-              </h3>
-              {isEditing && (
-                <div className="flex items-center justify-center space-x-2 mb-3">
-                  <span className={`text-sm font-medium ${editForm.brake_pad_unit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
-                  <button
-                    type="button"
-                    onClick={handleBrakePadUnitToggle}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                      editForm.brake_pad_unit === '%' ? 'bg-blue-600' : 'bg-gray-200'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        editForm.brake_pad_unit === '%' ? 'translate-x-6' : 'translate-x-1'
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-medium text-gray-900">
+                  Brake Pads ({isEditing ? editForm.brake_pad_unit : repair.brake_pad_unit})
+                </h3>
+                {isEditing && (
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-sm font-medium ${editForm.brake_pad_unit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
+                    <button
+                      type="button"
+                      onClick={handleBrakePadUnitToggle}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                        editForm.brake_pad_unit === '%' ? 'bg-blue-600' : 'bg-gray-200'
                       }`}
-                    />
-                  </button>
-                  <span className={`text-sm font-medium ${editForm.brake_pad_unit === '%' ? 'text-blue-600' : 'text-gray-500'}`}>%</span>
-                </div>
-              )}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          editForm.brake_pad_unit === '%' ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                    <span className={`text-sm font-medium ${editForm.brake_pad_unit === '%' ? 'text-blue-600' : 'text-gray-500'}`}>%</span>
+                  </div>
+                )}
+              </div>
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="text-center">
