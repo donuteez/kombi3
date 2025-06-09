@@ -326,6 +326,11 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
   
   return (
     <div className="max-w-4xl mx-auto">
+      {/* Page Title */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">Repair Sheet</h1>
+      </div>
+
       {showFileViewer && fileContent && (
         <FileViewer 
           fileName={repair.diagnostic_file_name || 'diagnostic.txt'} 
