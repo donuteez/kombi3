@@ -22,7 +22,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
   const [form, setForm] = useState({
     technician_name: '',
     ro_number: '',
-    customer_name: '',
+    customer_first_name: '',
+    customer_last_name: '',
     vehicle_mileage: '',
     customer_concern: '',
     recommendations: '',
@@ -67,7 +68,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
           setForm({
             technician_name: data.technician_name,
             ro_number: data.ro_number,
-            customer_name: data.customer_name || '',
+            customer_first_name: data.customer_first_name || '',
+            customer_last_name: data.customer_last_name || '',
             vehicle_mileage: data.vehicle_mileage?.toString() || '',
             customer_concern: data.customer_concern || '',
             recommendations: data.recommendations || '',
@@ -185,7 +187,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
       const formattedData = {
         technician_name: form.technician_name.trim(),
         ro_number: form.ro_number.trim(),
-        customer_name: form.customer_name.trim(),
+        customer_first_name: form.customer_first_name.trim() || null,
+        customer_last_name: form.customer_last_name.trim() || null,
         vehicle_mileage: form.vehicle_mileage ? parseInt(form.vehicle_mileage) : null,
         customer_concern: form.customer_concern.trim(),
         recommendations: form.recommendations.trim(),
@@ -281,8 +284,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <svg className="animate-spin h-8 w-8 text-blue-600 mx-auto\" xmlns="http://www.w3.org/2000/svg\" fill="none\" viewBox="0 0 24 24">
-            <circle className="opacity-25\" cx="12\" cy="12\" r="10\" stroke="currentColor\" strokeWidth="4"></circle>
+          <svg className="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
           <p className="mt-2 text-gray-600">Loading repair details...</p>
@@ -341,19 +344,34 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
             </div>
           </div>
 
-          {/* Customer Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Customer Name (Last, First)
-            </label>
-            <input
-              type="text"
-              name="customer_name"
-              value={form.customer_name}
-              onChange={handleChange}
-              placeholder="Madden, John"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          {/* Customer Name Fields */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Customer First Name
+              </label>
+              <input
+                type="text"
+                name="customer_first_name"
+                value={form.customer_first_name}
+                onChange={handleChange}
+                placeholder="John"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Customer Last Name
+              </label>
+              <input
+                type="text"
+                name="customer_last_name"
+                value={form.customer_last_name}
+                onChange={handleChange}
+                placeholder="Smith"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
           
           {/* Customer Concern */}

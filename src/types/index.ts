@@ -3,7 +3,8 @@ export interface RepairSheet {
   created_at: string;
   technician_name: string;
   ro_number: string;
-  customer_name?: string;
+  customer_first_name?: string;
+  customer_last_name?: string;
   vehicle_mileage?: number;
   customer_concern?: string;
   recommendations?: string;

@@ -117,6 +117,15 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       });
     }
   };
+
+  // Handle brake pad unit toggle in edit mode
+  const handleBrakePadUnitToggle = () => {
+    if (!editForm) return;
+    setEditForm(prev => ({
+      ...prev!,
+      brake_pad_unit: prev!.brake_pad_unit === 'MM' ? '%' : 'MM'
+    }));
+  };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!editForm) return;
@@ -139,15 +148,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
         [name]: value
       });
     }
-  };
-
-  // Handle brake pad unit toggle in edit mode
-  const handleBrakePadUnitToggle = () => {
-    if (!editForm) return;
-    setEditForm(prev => ({
-      ...prev!,
-      brake_pad_unit: prev!.brake_pad_unit === 'MM' ? '%' : 'MM'
-    }));
   };
   
   const handleSave = async () => {
@@ -281,6 +281,17 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       minute: '2-digit'
     }).format(date);
   };
+
+  const getCustomerDisplayName = (repair: RepairSheet) => {
+    if (repair.customer_first_name && repair.customer_last_name) {
+      return `${repair.customer_first_name} ${repair.customer_last_name}`;
+    } else if (repair.customer_first_name) {
+      return repair.customer_first_name;
+    } else if (repair.customer_last_name) {
+      return repair.customer_last_name;
+    }
+    return '—';
+  };
   
   if (loading) {
     return (
@@ -388,19 +399,33 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
               </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Customer Name</label>
+                <label className="block text-sm font-medium text-gray-700">Customer First Name</label>
                 {isEditing ? (
                   <input
                     type="text"
-                    name="customer_name"
-                    value={editForm.customer_name || ''}
+                    name="customer_first_name"
+                    value={editForm.customer_first_name || ''}
                     onChange={handleInputChange}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                 ) : (
-                  <p className="mt-1">{repair.customer_name || '—'}</p>
+                  <p className="mt-1">{repair.customer_first_name || '—'}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Customer Last Name</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="customer_last_name"
+                    value={editForm.customer_last_name || ''}
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                ) : (
+                  <p className="mt-1">{repair.customer_last_name || '—'}</p>
                 )}
               </div>
               <div>

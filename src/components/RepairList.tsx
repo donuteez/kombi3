@@ -8,7 +8,7 @@ interface RepairListProps {
   onViewDetail: (id: string) => void;
 }
 
-type SortField = 'customer_name' | 'ro_number' | 'technician_name' | 'created_at';
+type SortField = 'customer_first_name' | 'customer_last_name' | 'ro_number' | 'technician_name' | 'created_at';
 type SortDirection = 'asc' | 'desc';
 
 export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
@@ -82,13 +82,25 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
       setSortDirection('asc');
     }
   };
+
+  const getCustomerDisplayName = (repair: RepairSheet) => {
+    if (repair.customer_first_name && repair.customer_last_name) {
+      return `${repair.customer_first_name} ${repair.customer_last_name}`;
+    } else if (repair.customer_first_name) {
+      return repair.customer_first_name;
+    } else if (repair.customer_last_name) {
+      return repair.customer_last_name;
+    }
+    return '—';
+  };
   
   const filteredRepairs = repairs.filter(repair => {
     const searchLower = searchTerm.toLowerCase();
+    const customerName = getCustomerDisplayName(repair).toLowerCase();
     return (
       repair.technician_name.toLowerCase().includes(searchLower) ||
       repair.ro_number.toLowerCase().includes(searchLower) ||
-      (repair.customer_name && repair.customer_name.toLowerCase().includes(searchLower)) ||
+      customerName.includes(searchLower) ||
       (repair.customer_concern && repair.customer_concern.toLowerCase().includes(searchLower))
     );
   });
@@ -157,7 +169,7 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
             <table className="min-w-full bg-white">
               <thead className="bg-gray-100 border-b">
                 <tr>
-                  <SortableHeader field="customer_name" label="Customer" />
+                  <SortableHeader field="customer_first_name" label="Customer" />
                   <SortableHeader field="ro_number" label="RO Number" />
                   <SortableHeader field="technician_name" label="Technician" />
                   <SortableHeader field="created_at" label="Date" />
@@ -169,7 +181,7 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
               <tbody className="divide-y divide-gray-200">
                 {filteredRepairs.map((repair) => (
                   <tr key={repair.id} className="hover:bg-gray-50">
-                    <td className="py-3 px-4 whitespace-nowrap">{repair.customer_name || '—'}</td>
+                    <td className="py-3 px-4 whitespace-nowrap">{getCustomerDisplayName(repair)}</td>
                     <td className="py-3 px-4 whitespace-nowrap">{repair.ro_number}</td>
                     <td className="py-3 px-4 whitespace-nowrap">{repair.technician_name}</td>
                     <td className="py-3 px-4 whitespace-nowrap">{formatDate(repair.created_at)}</td>
