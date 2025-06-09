@@ -326,9 +326,49 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
   
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Page Title */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Repair Sheet</h1>
+      {/* Page Title with Back Link */}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <h1 className="text-3xl font-bold text-gray-900">Repair Sheet</h1>
+          <button
+            onClick={onBack}
+            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
+          >
+            ← Back to List
+          </button>
+        </div>
+        {!isEditing ? (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Edit
+          </button>
+        ) : (
+          <div className="space-x-2">
+            <button
+              onClick={handleCancel}
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+              disabled={isSaving || isDeleting}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
+              disabled={isDeleting || isSaving}
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
+              disabled={isSaving || isDeleting}
+            >
+              {isSaving ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+        )}
       </div>
 
       {showFileViewer && fileContent && (
@@ -341,48 +381,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={onBack}
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
-            >
-              ← Back to List
-            </button>
-            {!isEditing ? (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Edit
-              </button>
-            ) : (
-              <div className="space-x-2">
-                <button
-                  onClick={handleCancel}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
-                  disabled={isSaving || isDeleting}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
-                  disabled={isDeleting || isSaving}
-                >
-                  {isDeleting ? 'Deleting...' : 'Delete'}
-                </button>
-                <button
-                  onClick={handleSave}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
-                  disabled={isSaving || isDeleting}
-                >
-                  {isSaving ? 'Saving...' : 'Save'}
-                </button>
-              </div>
-            )}
-          </div>
-          
-          <div className="mt-4 space-y-4">
+          <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">RO Number</label>
