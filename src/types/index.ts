@@ -13,6 +13,7 @@ export interface RepairSheet {
   tire_pressure: TirePressure;
   diagnostic_file_id?: string;
   diagnostic_file_name?: string;
+  brake_pad_unit: 'MM' | '%';
 }
 
 export interface TireMeasurements {
@@ -23,7 +24,7 @@ export interface TireMeasurements {
 }
 
 export interface BrakeMeasurements {
-  lf: number; // Left Front (in mm)
+  lf: number; // Left Front (in mm or %)
   rf: number; // Right Front
   lr: number; // Left Rear
   rr: number; // Right Rear

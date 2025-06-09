@@ -17,7 +17,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
   const [isLoading, setIsLoading] = useState(false);
   const [diagnosticFile, setDiagnosticFile] = useState<File | null>(null);
   const [existingFileName, setExistingFileName] = useState<string | null>(null);
-  const [brakePadUnit, setBrakePadUnit] = useState<'MM' | '%'>('MM');
   
   // Form state
   const [form, setForm] = useState({
@@ -45,7 +44,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
       front_out: '',
       rear_in: '',
       rear_out: ''
-    }
+    },
+    brake_pad_unit: 'MM' as 'MM' | '%'
   });
 
   // Load repair data if in edit mode
@@ -89,7 +89,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
               front_out: data.tire_pressure.front_out.toString(),
               rear_in: data.tire_pressure.rear_in.toString(),
               rear_out: data.tire_pressure.rear_out.toString()
-            }
+            },
+            brake_pad_unit: data.brake_pad_unit || 'MM'
           });
           
           if (data.diagnostic_file_name) {
@@ -206,7 +207,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
           front_out: form.tire_pressure.front_out ? parseInt(form.tire_pressure.front_out) : 0,
           rear_in: form.tire_pressure.rear_in ? parseInt(form.tire_pressure.rear_in) : 0,
           rear_out: form.tire_pressure.rear_out ? parseInt(form.tire_pressure.rear_out) : 0
-        } as TirePressure
+        } as TirePressure,
+        brake_pad_unit: form.brake_pad_unit
       };
       
       // Upload diagnostic file if provided
@@ -279,8 +281,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <svg className="animate-spin h-8 w-8 text-blue-600 mx-auto\" xmlns="http://www.w3.org/2000/svg\" fill="none\" viewBox="0 0 24 24">
-            <circle className="opacity-25\" cx="12\" cy="12\" r="10\" stroke="currentColor\" strokeWidth="4"></circle>
+          <svg className="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
           <p className="mt-2 text-gray-600">Loading repair details...</p>
@@ -466,21 +468,21 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-medium text-gray-800">Brake Pads</h3>
                 <div className="flex items-center space-x-2">
-                  <span className={`text-sm font-medium ${brakePadUnit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
+                  <span className={`text-sm font-medium ${form.brake_pad_unit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
                   <button
                     type="button"
-                    onClick={() => setBrakePadUnit(brakePadUnit === 'MM' ? '%' : 'MM')}
+                    onClick={() => setForm(prev => ({ ...prev, brake_pad_unit: prev.brake_pad_unit === 'MM' ? '%' : 'MM' }))}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                      brakePadUnit === '%' ? 'bg-blue-600' : 'bg-gray-200'
+                      form.brake_pad_unit === '%' ? 'bg-blue-600' : 'bg-gray-200'
                     }`}
                   >
                     <span
                       className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        brakePadUnit === '%' ? 'translate-x-6' : 'translate-x-1'
+                        form.brake_pad_unit === '%' ? 'translate-x-6' : 'translate-x-1'
                       }`}
                     />
                   </button>
-                  <span className={`text-sm font-medium ${brakePadUnit === '%' ? 'text-blue-600' : 'text-gray-500'}`}>%</span>
+                  <span className={`text-sm font-medium ${form.brake_pad_unit === '%' ? 'text-blue-600' : 'text-gray-500'}`}>%</span>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-6">
@@ -495,7 +497,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                         onChange={handleChange}
                         className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <span className="ml-2 text-gray-600">{brakePadUnit}</span>
+                      <span className="ml-2 text-gray-600">{form.brake_pad_unit}</span>
                     </div>
                   </div>
                   <div>
@@ -508,7 +510,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                         onChange={handleChange}
                         className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <span className="ml-2 text-gray-600">{brakePadUnit}</span>
+                      <span className="ml-2 text-gray-600">{form.brake_pad_unit}</span>
                     </div>
                   </div>
                 </div>
@@ -523,7 +525,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                         onChange={handleChange}
                         className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <span className="ml-2 text-gray-600">{brakePadUnit}</span>
+                      <span className="ml-2 text-gray-600">{form.brake_pad_unit}</span>
                     </div>
                   </div>
                   <div>
@@ -536,7 +538,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                         onChange={handleChange}
                         className="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
-                      <span className="ml-2 text-gray-600">{brakePadUnit}</span>
+                      <span className="ml-2 text-gray-600">{form.brake_pad_unit}</span>
                     </div>
                   </div>
                 </div>

@@ -140,6 +140,15 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       });
     }
   };
+
+  // Handle brake pad unit toggle in edit mode
+  const handleBrakePadUnitToggle = () => {
+    if (!editForm) return;
+    setEditForm(prev => ({
+      ...prev!,
+      brake_pad_unit: prev!.brake_pad_unit === 'MM' ? '%' : 'MM'
+    }));
+  };
   
   const handleSave = async () => {
     if (!editForm) return;
@@ -565,7 +574,28 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
             
             {/* Brake Pads */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">Brake Pads (MM)</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-3">
+                Brake Pads ({isEditing ? editForm.brake_pad_unit : repair.brake_pad_unit})
+              </h3>
+              {isEditing && (
+                <div className="flex items-center justify-center space-x-2 mb-3">
+                  <span className={`text-sm font-medium ${editForm.brake_pad_unit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
+                  <button
+                    type="button"
+                    onClick={handleBrakePadUnitToggle}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                      editForm.brake_pad_unit === '%' ? 'bg-blue-600' : 'bg-gray-200'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        editForm.brake_pad_unit === '%' ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                  <span className={`text-sm font-medium ${editForm.brake_pad_unit === '%' ? 'text-blue-600' : 'text-gray-500'}`}>%</span>
+                </div>
+              )}
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="text-center">
@@ -579,7 +609,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.lf}</p>
+                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.lf} {repair.brake_pad_unit}</p>
                     )}
                   </div>
                   <div className="text-center">
@@ -593,7 +623,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.rf}</p>
+                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.rf} {repair.brake_pad_unit}</p>
                     )}
                   </div>
                   <div className="text-center">
@@ -607,7 +637,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.lr}</p>
+                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.lr} {repair.brake_pad_unit}</p>
                     )}
                   </div>
                   <div className="text-center">
@@ -621,7 +651,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                         className="mt-1 block w-20 mx-auto rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     ) : (
-                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.rr}</p>
+                      <p className="mt-1 text-lg font-semibold">{repair.brake_pads.rr} {repair.brake_pad_unit}</p>
                     )}
                   </div>
                 </div>
