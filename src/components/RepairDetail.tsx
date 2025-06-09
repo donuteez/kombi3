@@ -399,9 +399,9 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
               </div>
             </div>
             
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Customer First Name</label>
+                <label className="block text-sm font-medium text-gray-700">Customer</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -411,21 +411,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                 ) : (
-                  <p className="mt-1">{repair.customer_first_name || '—'}</p>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Customer Last Name</label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="customer_last_name"
-                    value={editForm.customer_last_name || ''}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  />
-                ) : (
-                  <p className="mt-1">{repair.customer_last_name || '—'}</p>
+                  <p className="mt-1">{getCustomerDisplayName(repair)}</p>
                 )}
               </div>
               <div>
