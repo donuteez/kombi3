@@ -22,6 +22,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [newDiagnosticFile, setNewDiagnosticFile] = useState<File | null>(null);
+  const [brakePadUnit, setBrakePadUnit] = useState<'MM' | '%'>('MM');
   
   useEffect(() => {
     const fetchRepairDetail = async () => {
@@ -565,7 +566,25 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
             
             {/* Brake Pads */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">Brake Pads (MM)</h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-medium text-gray-900">Brake Pads ({brakePadUnit})</h3>
+                <div className="flex items-center space-x-2">
+                  <span className={`text-sm font-medium ${brakePadUnit === 'MM' ? 'text-blue-600' : 'text-gray-500'}`}>MM</span>
+                  <button
+                    onClick={() => setBrakePadUnit(brakePadUnit === 'MM' ? '%' : 'MM')}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                      brakePadUnit === '%' ? 'bg-blue-600' : 'bg-gray-200'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        brakePadUnit === '%' ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                  <span className={`text-sm font-medium ${brakePadUnit === '%' ? 'text-blue-600' : 'text-gray-500'}`}>%</span>
+                </div>
+              </div>
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="text-center">
