@@ -403,13 +403,24 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
               <div>
                 <label className="block text-sm font-medium text-gray-700">Customer</label>
                 {isEditing ? (
-                  <input
-                    type="text"
-                    name="customer_first_name"
-                    value={editForm.customer_first_name || ''}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  />
+                  <div className="space-y-2">
+                    <input
+                      type="text"
+                      name="customer_first_name"
+                      value={editForm.customer_first_name || ''}
+                      onChange={handleInputChange}
+                      placeholder="First name"
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                    <input
+                      type="text"
+                      name="customer_last_name"
+                      value={editForm.customer_last_name || ''}
+                      onChange={handleInputChange}
+                      placeholder="Last name"
+                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    />
+                  </div>
                 ) : (
                   <p className="mt-1">{getCustomerDisplayName(repair)}</p>
                 )}
