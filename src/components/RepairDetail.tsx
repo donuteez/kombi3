@@ -327,48 +327,48 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
   return (
     <div className="max-w-4xl mx-auto">
       {/* Page Title with Back Link */}
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-900">Repair Sheet</h1>
-          <button
-            onClick={onBack}
-            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
-          >
-            ← Back to List
-          </button>
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Edit
+            </button>
+          ) : (
+            <div className="space-x-2">
+              <button
+                onClick={handleCancel}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                disabled={isSaving || isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
+                disabled={isDeleting || isSaving}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
+                disabled={isSaving || isDeleting}
+              >
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          )}
         </div>
-        {!isEditing ? (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Edit
-          </button>
-        ) : (
-          <div className="space-x-2">
-            <button
-              onClick={handleCancel}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
-              disabled={isSaving || isDeleting}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
-              disabled={isDeleting || isSaving}
-            >
-              {isDeleting ? 'Deleting...' : 'Delete'}
-            </button>
-            <button
-              onClick={handleSave}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
-              disabled={isSaving || isDeleting}
-            >
-              {isSaving ? 'Saving...' : 'Save'}
-            </button>
-          </div>
-        )}
+        <button
+          onClick={onBack}
+          className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 mt-2"
+        >
+          ← Back to List
+        </button>
       </div>
 
       {showFileViewer && fileContent && (
