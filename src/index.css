@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Print styles */
+@media print {
+  /* Hide header/navigation when printing */
+  header {
+    display: none !important;
+  }
+  
+  /* Hide footer when printing */
+  footer {
+    display: none !important;
+  }
+  
+  /* Hide back to list link when printing */
+  .print-hide {
+    display: none !important;
+  }
+  
+  /* Ensure proper margins for printing */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Optimize page layout for printing */
+  .print-container {
+    margin: 0;
+    padding: 20px;
+  }
+  
+  /* Remove shadows and borders that don't print well */
+  .bg-white {
+    box-shadow: none !important;
+  }
+}

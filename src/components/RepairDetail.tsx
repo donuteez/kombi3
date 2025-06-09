@@ -329,13 +329,13 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
   }
   
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto print-container">
       {/* Page Title with Back Link */}
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-900">Repair Sheet</h1>
           {!isEditing ? (
-            <div className="space-x-2">
+            <div className="space-x-2 print-hide">
               <button
                 onClick={handlePrint}
                 className="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
@@ -378,7 +378,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
         </div>
         <button
           onClick={onBack}
-          className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 mt-2"
+          className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 mt-2 print-hide"
         >
           ← Back to List
         </button>
@@ -471,7 +471,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                 {!isEditing && repair.customer_concern && (
                   <button
                     onClick={() => handleCopy(repair.customer_concern, 'Customer concern')}
-                    className="p-1 text-gray-500 hover:text-blue-600"
+                    className="p-1 text-gray-500 hover:text-blue-600 print-hide"
                     title="Copy to clipboard"
                   >
                     <Copy size={16} />
@@ -497,7 +497,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                 {!isEditing && repair.recommendations && (
                   <button
                     onClick={() => handleCopy(repair.recommendations, 'Recommendations')}
-                    className="p-1 text-gray-500 hover:text-blue-600"
+                    className="p-1 text-gray-500 hover:text-blue-600 print-hide"
                     title="Copy to clipboard"
                   >
                     <Copy size={16} />
@@ -523,7 +523,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                 {!isEditing && repair.shop_recommendations && (
                   <button
                     onClick={() => handleCopy(repair.shop_recommendations, 'Shop recommendations')}
-                    className="p-1 text-gray-500 hover:text-blue-600"
+                    className="p-1 text-gray-500 hover:text-blue-600 print-hide"
                     title="Copy to clipboard"
                   >
                     <Copy size={16} />
@@ -781,7 +781,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           </div>
           
           {/* Diagnostic File */}
-          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4 print-hide">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-medium text-blue-900">Diagnostic File</h3>
