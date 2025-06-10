@@ -636,7 +636,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="flex items-center">
-                        <span className="text-xs text-gray-600 w-8">LEFT</span>
+                        <span className="text-xs text-gray-600 mr-1">LEFT</span>
                         <input
                           type="number"
                           name="tire_pressure.front_left_in"
@@ -646,7 +646,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                         />
                       </div>
                       <div className="flex items-center">
-                        <span className="text-xs text-gray-600 w-8">RIGHT</span>
+                        <span className="text-xs text-gray-600 mr-1">RIGHT</span>
                         <input
                           type="number"
                           name="tire_pressure.front_right_in"
@@ -666,7 +666,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="flex items-center">
-                        <span className="text-xs text-gray-600 w-8">LEFT</span>
+                        <span className="text-xs text-gray-600 mr-1">LEFT</span>
                         <input
                           type="number"
                           name="tire_pressure.rear_left_in"
@@ -676,7 +676,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                         />
                       </div>
                       <div className="flex items-center">
-                        <span className="text-xs text-gray-600 w-8">RIGHT</span>
+                        <span className="text-xs text-gray-600 mr-1">RIGHT</span>
                         <input
                           type="number"
                           name="tire_pressure.rear_right_in"
