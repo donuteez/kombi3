@@ -297,7 +297,8 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      timeZone: 'America/Los_Angeles'
     }).format(date);
   };
 

@@ -112,7 +112,8 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      timeZone: 'America/Los_Angeles'
     }).format(date);
   };
 
