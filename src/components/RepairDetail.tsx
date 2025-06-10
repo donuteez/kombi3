@@ -800,7 +800,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                       </div>
                       <div className="grid grid-cols-2 gap-2 print:gap-1">
                         <div className="flex items-center">
-                          <span className="text-xs text-gray-600 w-8 print:text-xs">LEFT</span>
+                          <span className="text-xs text-gray-600 mr-1 print:text-xs">LEFT</span>
                           {isEditing ? (
                             <input
                               type="number"
@@ -814,7 +814,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                           )}
                         </div>
                         <div className="flex items-center">
-                          <span className="text-xs text-gray-600 w-8 print:text-xs">RIGHT</span>
+                          <span className="text-xs text-gray-600 mr-1 print:text-xs">RIGHT</span>
                           {isEditing ? (
                             <input
                               type="number"
@@ -838,7 +838,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                       </div>
                       <div className="grid grid-cols-2 gap-2 print:gap-1">
                         <div className="flex items-center">
-                          <span className="text-xs text-gray-600 w-8 print:text-xs">LEFT</span>
+                          <span className="text-xs text-gray-600 mr-1 print:text-xs">LEFT</span>
                           {isEditing ? (
                             <input
                               type="number"
@@ -852,7 +852,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                           )}
                         </div>
                         <div className="flex items-center">
-                          <span className="text-xs text-gray-600 w-8 print:text-xs">RIGHT</span>
+                          <span className="text-xs text-gray-600 mr-1 print:text-xs">RIGHT</span>
                           {isEditing ? (
                             <input
                               type="number"
