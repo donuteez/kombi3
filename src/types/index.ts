@@ -34,7 +34,8 @@ export interface BrakeMeasurements {
 }
 
 export interface TirePressure {
-  front_in: number; // Front tires pressure coming in (PSI)
+  front_left_in: number; // Front left tire pressure coming in (PSI)
+  front_right_in: number; // Front right tire pressure coming in (PSI)
   front_out: number; // Front tires pressure going out (PSI)
   rear_in: number; // Rear tires pressure coming in (PSI)
   rear_out: number; // Rear tires pressure going out (PSI)

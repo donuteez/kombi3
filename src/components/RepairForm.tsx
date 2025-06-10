@@ -41,7 +41,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
       rr: ''
     },
     tire_pressure: {
-      front_in: '',
+      front_left_in: '',
+      front_right_in: '',
       front_out: '',
       rear_in: '',
       rear_out: ''
@@ -66,6 +67,17 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
         if (error) throw error;
         
         if (data) {
+          // Handle backward compatibility for tire pressure
+          const tirePressure = data.tire_pressure;
+          let frontLeftIn = tirePressure.front_left_in;
+          let frontRightIn = tirePressure.front_right_in;
+          
+          // If the old front_in field exists and new fields don't, use front_in for both
+          if (tirePressure.front_in !== undefined && (frontLeftIn === undefined || frontRightIn === undefined)) {
+            frontLeftIn = tirePressure.front_in;
+            frontRightIn = tirePressure.front_in;
+          }
+          
           setForm({
             technician_name: data.technician_name,
             ro_number: data.ro_number,
@@ -88,10 +100,11 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
               rr: data.brake_pads.rr.toString()
             },
             tire_pressure: {
-              front_in: data.tire_pressure.front_in.toString(),
-              front_out: data.tire_pressure.front_out.toString(),
-              rear_in: data.tire_pressure.rear_in.toString(),
-              rear_out: data.tire_pressure.rear_out.toString()
+              front_left_in: frontLeftIn?.toString() || '',
+              front_right_in: frontRightIn?.toString() || '',
+              front_out: data.tire_pressure.front_out?.toString() || '',
+              rear_in: data.tire_pressure.rear_in?.toString() || '',
+              rear_out: data.tire_pressure.rear_out?.toString() || ''
             },
             front_brake_pad_unit: data.front_brake_pad_unit || data.brake_pad_unit || 'MM',
             rear_brake_pad_unit: data.rear_brake_pad_unit || data.brake_pad_unit || 'MM'
@@ -208,7 +221,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
           rr: form.brake_pads.rr ? parseInt(form.brake_pads.rr) : 0
         } as BrakeMeasurements,
         tire_pressure: {
-          front_in: form.tire_pressure.front_in ? parseInt(form.tire_pressure.front_in) : 0,
+          front_left_in: form.tire_pressure.front_left_in ? parseInt(form.tire_pressure.front_left_in) : 0,
+          front_right_in: form.tire_pressure.front_right_in ? parseInt(form.tire_pressure.front_right_in) : 0,
           front_out: form.tire_pressure.front_out ? parseInt(form.tire_pressure.front_out) : 0,
           rear_in: form.tire_pressure.rear_in ? parseInt(form.tire_pressure.rear_in) : 0,
           rear_out: form.tire_pressure.rear_out ? parseInt(form.tire_pressure.rear_out) : 0
@@ -288,8 +302,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
     return (
       <div className="max-w-4xl mx-auto">
         <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <svg className="animate-spin h-8 w-8 text-blue-600 mx-auto\" xmlns="http://www.w3.org/2000/svg\" fill="none\" viewBox="0 0 24 24">
-            <circle className="opacity-25\" cx="12\" cy="12\" r="10\" stroke="currentColor\" strokeWidth="4"></circle>
+          <svg className="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
           <p className="mt-2 text-gray-600">Loading repair details...</p>
@@ -603,11 +617,22 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                     <span className="text-sm font-medium text-gray-700">TIRE PRESSURE IN:</span>
                   </div>
                   <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
-                    <span className="text-sm font-medium text-gray-700">FRONT</span>
+                    <span className="text-sm font-medium text-gray-700">FRONT LEFT</span>
                     <input
                       type="number"
-                      name="tire_pressure.front_in"
-                      value={form.tire_pressure.front_in}
+                      name="tire_pressure.front_left_in"
+                      value={form.tire_pressure.front_left_in}
+                      onChange={handleChange}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-600">PSI</span>
+                  </div>
+                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
+                    <span className="text-sm font-medium text-gray-700">FRONT RIGHT</span>
+                    <input
+                      type="number"
+                      name="tire_pressure.front_right_in"
+                      value={form.tire_pressure.front_right_in}
                       onChange={handleChange}
                       className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
