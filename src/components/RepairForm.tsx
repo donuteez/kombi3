@@ -44,7 +44,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
       front_left_in: '',
       front_right_in: '',
       front_out: '',
-      rear_in: '',
+      rear_left_in: '',
+      rear_right_in: '',
       rear_out: ''
     },
     front_brake_pad_unit: 'MM' as 'MM' | '%',
@@ -71,11 +72,19 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
           const tirePressure = data.tire_pressure;
           let frontLeftIn = tirePressure.front_left_in;
           let frontRightIn = tirePressure.front_right_in;
+          let rearLeftIn = tirePressure.rear_left_in;
+          let rearRightIn = tirePressure.rear_right_in;
           
           // If the old front_in field exists and new fields don't, use front_in for both
           if (tirePressure.front_in !== undefined && (frontLeftIn === undefined || frontRightIn === undefined)) {
             frontLeftIn = tirePressure.front_in;
             frontRightIn = tirePressure.front_in;
+          }
+          
+          // If the old rear_in field exists and new fields don't, use rear_in for both
+          if (tirePressure.rear_in !== undefined && (rearLeftIn === undefined || rearRightIn === undefined)) {
+            rearLeftIn = tirePressure.rear_in;
+            rearRightIn = tirePressure.rear_in;
           }
           
           setForm({
@@ -103,7 +112,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
               front_left_in: frontLeftIn?.toString() || '',
               front_right_in: frontRightIn?.toString() || '',
               front_out: data.tire_pressure.front_out?.toString() || '',
-              rear_in: data.tire_pressure.rear_in?.toString() || '',
+              rear_left_in: rearLeftIn?.toString() || '',
+              rear_right_in: rearRightIn?.toString() || '',
               rear_out: data.tire_pressure.rear_out?.toString() || ''
             },
             front_brake_pad_unit: data.front_brake_pad_unit || data.brake_pad_unit || 'MM',
@@ -224,7 +234,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
           front_left_in: form.tire_pressure.front_left_in ? parseInt(form.tire_pressure.front_left_in) : 0,
           front_right_in: form.tire_pressure.front_right_in ? parseInt(form.tire_pressure.front_right_in) : 0,
           front_out: form.tire_pressure.front_out ? parseInt(form.tire_pressure.front_out) : 0,
-          rear_in: form.tire_pressure.rear_in ? parseInt(form.tire_pressure.rear_in) : 0,
+          rear_left_in: form.tire_pressure.rear_left_in ? parseInt(form.tire_pressure.rear_left_in) : 0,
+          rear_right_in: form.tire_pressure.rear_right_in ? parseInt(form.tire_pressure.rear_right_in) : 0,
           rear_out: form.tire_pressure.rear_out ? parseInt(form.tire_pressure.rear_out) : 0
         } as TirePressure,
         front_brake_pad_unit: form.front_brake_pad_unit,
@@ -638,12 +649,23 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                     />
                     <span className="text-sm text-gray-600">PSI</span>
                   </div>
-                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center">
-                    <span className="text-sm font-medium text-gray-700">REAR</span>
+                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2">
+                    <span className="text-sm font-medium text-gray-700">REAR LEFT</span>
                     <input
                       type="number"
-                      name="tire_pressure.rear_in"
-                      value={form.tire_pressure.rear_in}
+                      name="tire_pressure.rear_left_in"
+                      value={form.tire_pressure.rear_left_in}
+                      onChange={handleChange}
+                      className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-600">PSI</span>
+                  </div>
+                  <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center">
+                    <span className="text-sm font-medium text-gray-700">REAR RIGHT</span>
+                    <input
+                      type="number"
+                      name="tire_pressure.rear_right_in"
+                      value={form.tire_pressure.rear_right_in}
                       onChange={handleChange}
                       className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />

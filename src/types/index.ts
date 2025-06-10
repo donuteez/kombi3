@@ -37,7 +37,8 @@ export interface TirePressure {
   front_left_in: number; // Front left tire pressure coming in (PSI)
   front_right_in: number; // Front right tire pressure coming in (PSI)
   front_out: number; // Front tires pressure going out (PSI)
-  rear_in: number; // Rear tires pressure coming in (PSI)
+  rear_left_in: number; // Rear left tire pressure coming in (PSI)
+  rear_right_in: number; // Rear right tire pressure coming in (PSI)
   rear_out: number; // Rear tires pressure going out (PSI)
 }
 

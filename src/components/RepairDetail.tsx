@@ -36,10 +36,12 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           throw new Error(`Failed to fetch repair details: ${error.message}`);
         }
         
-        // Handle backward compatibility for tire pressure and brake pad units
+        // Handle backward compatibility for tire pressure
         const tirePressure = data.tire_pressure;
         let frontLeftIn = tirePressure.front_left_in;
         let frontRightIn = tirePressure.front_right_in;
+        let rearLeftIn = tirePressure.rear_left_in;
+        let rearRightIn = tirePressure.rear_right_in;
         
         // If the old front_in field exists and new fields don't, use front_in for both
         if (tirePressure.front_in !== undefined && (frontLeftIn === undefined || frontRightIn === undefined)) {
@@ -47,12 +49,20 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           frontRightIn = tirePressure.front_in;
         }
         
+        // If the old rear_in field exists and new fields don't, use rear_in for both
+        if (tirePressure.rear_in !== undefined && (rearLeftIn === undefined || rearRightIn === undefined)) {
+          rearLeftIn = tirePressure.rear_in;
+          rearRightIn = tirePressure.rear_in;
+        }
+        
         const repairData = {
           ...data,
           tire_pressure: {
             ...tirePressure,
             front_left_in: frontLeftIn || 0,
-            front_right_in: frontRightIn || 0
+            front_right_in: frontRightIn || 0,
+            rear_left_in: rearLeftIn || 0,
+            rear_right_in: rearRightIn || 0
           },
           front_brake_pad_unit: data.front_brake_pad_unit || data.brake_pad_unit || 'MM',
           rear_brake_pad_unit: data.rear_brake_pad_unit || data.brake_pad_unit || 'MM'
@@ -811,18 +821,33 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                       )}
                       <span className="text-sm text-gray-600 print:text-xs">PSI</span>
                     </div>
-                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center print:gap-1">
-                      <span className="text-sm font-medium text-gray-700 print:text-xs">REAR</span>
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2 print:mb-1 print:gap-1">
+                      <span className="text-sm font-medium text-gray-700 print:text-xs">REAR LEFT</span>
                       {isEditing ? (
                         <input
                           type="number"
-                          name="tire_pressure.rear_in"
-                          value={editForm.tire_pressure.rear_in}
+                          name="tire_pressure.rear_left_in"
+                          value={editForm.tire_pressure.rear_left_in}
                           onChange={handleInputChange}
                           className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       ) : (
-                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.rear_in}</p>
+                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.rear_left_in}</p>
+                      )}
+                      <span className="text-sm text-gray-600 print:text-xs">PSI</span>
+                    </div>
+                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center print:gap-1">
+                      <span className="text-sm font-medium text-gray-700 print:text-xs">REAR RIGHT</span>
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          name="tire_pressure.rear_right_in"
+                          value={editForm.tire_pressure.rear_right_in}
+                          onChange={handleInputChange}
+                          className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      ) : (
+                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.rear_right_in}</p>
                       )}
                       <span className="text-sm text-gray-600 print:text-xs">PSI</span>
                     </div>
