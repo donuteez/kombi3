@@ -794,7 +794,10 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                     
                     {/* Front Row - Left and Right side by side */}
                     <div className="mb-3 print:mb-2">
-                      <div className="text-xs font-medium text-gray-600 mb-1 print:text-xs">FRONT</div>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="text-xs font-medium text-gray-600 print:text-xs">FRONT</div>
+                        <div className="text-xs text-gray-600 print:text-xs">PSI</div>
+                      </div>
                       <div className="grid grid-cols-2 gap-2 print:gap-1">
                         <div className="flex items-center">
                           <span className="text-xs text-gray-600 w-8 print:text-xs">LEFT</span>
@@ -809,7 +812,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                           ) : (
                             <p className="text-sm font-semibold print:text-xs">{repair.tire_pressure.front_left_in}</p>
                           )}
-                          <span className="text-xs text-gray-600 ml-1 print:text-xs">PSI</span>
                         </div>
                         <div className="flex items-center">
                           <span className="text-xs text-gray-600 w-8 print:text-xs">RIGHT</span>
@@ -824,14 +826,16 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                           ) : (
                             <p className="text-sm font-semibold print:text-xs">{repair.tire_pressure.front_right_in}</p>
                           )}
-                          <span className="text-xs text-gray-600 ml-1 print:text-xs">PSI</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Rear Row - Left and Right side by side */}
                     <div>
-                      <div className="text-xs font-medium text-gray-600 mb-1 print:text-xs">REAR</div>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="text-xs font-medium text-gray-600 print:text-xs">REAR</div>
+                        <div className="text-xs text-gray-600 print:text-xs">PSI</div>
+                      </div>
                       <div className="grid grid-cols-2 gap-2 print:gap-1">
                         <div className="flex items-center">
                           <span className="text-xs text-gray-600 w-8 print:text-xs">LEFT</span>
@@ -846,7 +850,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                           ) : (
                             <p className="text-sm font-semibold print:text-xs">{repair.tire_pressure.rear_left_in}</p>
                           )}
-                          <span className="text-xs text-gray-600 ml-1 print:text-xs">PSI</span>
                         </div>
                         <div className="flex items-center">
                           <span className="text-xs text-gray-600 w-8 print:text-xs">RIGHT</span>
@@ -861,7 +864,6 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                           ) : (
                             <p className="text-sm font-semibold print:text-xs">{repair.tire_pressure.rear_right_in}</p>
                           )}
-                          <span className="text-xs text-gray-600 ml-1 print:text-xs">PSI</span>
                         </div>
                       </div>
                     </div>

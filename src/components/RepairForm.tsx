@@ -630,7 +630,10 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                   
                   {/* Front Row - Left and Right side by side */}
                   <div className="mb-3">
-                    <div className="text-xs font-medium text-gray-600 mb-1">FRONT</div>
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="text-xs font-medium text-gray-600">FRONT</div>
+                      <div className="text-xs text-gray-600">PSI</div>
+                    </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="flex items-center">
                         <span className="text-xs text-gray-600 w-8">LEFT</span>
@@ -641,7 +644,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                           onChange={handleChange}
                           className="w-16 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
-                        <span className="text-xs text-gray-600 ml-1">PSI</span>
                       </div>
                       <div className="flex items-center">
                         <span className="text-xs text-gray-600 w-8">RIGHT</span>
@@ -652,14 +654,16 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                           onChange={handleChange}
                           className="w-16 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
-                        <span className="text-xs text-gray-600 ml-1">PSI</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Rear Row - Left and Right side by side */}
                   <div>
-                    <div className="text-xs font-medium text-gray-600 mb-1">REAR</div>
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="text-xs font-medium text-gray-600">REAR</div>
+                      <div className="text-xs text-gray-600">PSI</div>
+                    </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="flex items-center">
                         <span className="text-xs text-gray-600 w-8">LEFT</span>
@@ -670,7 +674,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                           onChange={handleChange}
                           className="w-16 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
-                        <span className="text-xs text-gray-600 ml-1">PSI</span>
                       </div>
                       <div className="flex items-center">
                         <span className="text-xs text-gray-600 w-8">RIGHT</span>
@@ -681,7 +684,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
                           onChange={handleChange}
                           className="w-16 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
-                        <span className="text-xs text-gray-600 ml-1">PSI</span>
                       </div>
                     </div>
                   </div>
