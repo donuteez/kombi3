@@ -791,65 +791,79 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
                     <div className="flex items-center justify-between mb-2 print:mb-1">
                       <span className="text-sm font-medium text-gray-700 print:text-xs">TIRE PRESSURE IN:</span>
                     </div>
-                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2 print:mb-1 print:gap-1">
-                      <span className="text-sm font-medium text-gray-700 print:text-xs">FRONT LEFT</span>
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          name="tire_pressure.front_left_in"
-                          value={editForm.tire_pressure.front_left_in}
-                          onChange={handleInputChange}
-                          className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      ) : (
-                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.front_left_in}</p>
-                      )}
-                      <span className="text-sm text-gray-600 print:text-xs">PSI</span>
+                    
+                    {/* Front Row - Left and Right side by side */}
+                    <div className="mb-3 print:mb-2">
+                      <div className="text-xs font-medium text-gray-600 mb-1 print:text-xs">FRONT</div>
+                      <div className="grid grid-cols-2 gap-2 print:gap-1">
+                        <div className="flex items-center">
+                          <span className="text-xs text-gray-600 w-8 print:text-xs">LEFT</span>
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              name="tire_pressure.front_left_in"
+                              value={editForm.tire_pressure.front_left_in}
+                              onChange={handleInputChange}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                          ) : (
+                            <p className="text-sm font-semibold print:text-xs">{repair.tire_pressure.front_left_in}</p>
+                          )}
+                          <span className="text-xs text-gray-600 ml-1 print:text-xs">PSI</span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="text-xs text-gray-600 w-8 print:text-xs">RIGHT</span>
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              name="tire_pressure.front_right_in"
+                              value={editForm.tire_pressure.front_right_in}
+                              onChange={handleInputChange}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                          ) : (
+                            <p className="text-sm font-semibold print:text-xs">{repair.tire_pressure.front_right_in}</p>
+                          )}
+                          <span className="text-xs text-gray-600 ml-1 print:text-xs">PSI</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2 print:mb-1 print:gap-1">
-                      <span className="text-sm font-medium text-gray-700 print:text-xs">FRONT RIGHT</span>
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          name="tire_pressure.front_right_in"
-                          value={editForm.tire_pressure.front_right_in}
-                          onChange={handleInputChange}
-                          className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      ) : (
-                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.front_right_in}</p>
-                      )}
-                      <span className="text-sm text-gray-600 print:text-xs">PSI</span>
-                    </div>
-                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center mb-2 print:mb-1 print:gap-1">
-                      <span className="text-sm font-medium text-gray-700 print:text-xs">REAR LEFT</span>
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          name="tire_pressure.rear_left_in"
-                          value={editForm.tire_pressure.rear_left_in}
-                          onChange={handleInputChange}
-                          className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      ) : (
-                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.rear_left_in}</p>
-                      )}
-                      <span className="text-sm text-gray-600 print:text-xs">PSI</span>
-                    </div>
-                    <div className="grid grid-cols-[auto,1fr,auto] gap-2 items-center print:gap-1">
-                      <span className="text-sm font-medium text-gray-700 print:text-xs">REAR RIGHT</span>
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          name="tire_pressure.rear_right_in"
-                          value={editForm.tire_pressure.rear_right_in}
-                          onChange={handleInputChange}
-                          className="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      ) : (
-                        <p className="text-lg font-semibold print:text-xs">{repair.tire_pressure.rear_right_in}</p>
-                      )}
-                      <span className="text-sm text-gray-600 print:text-xs">PSI</span>
+
+                    {/* Rear Row - Left and Right side by side */}
+                    <div>
+                      <div className="text-xs font-medium text-gray-600 mb-1 print:text-xs">REAR</div>
+                      <div className="grid grid-cols-2 gap-2 print:gap-1">
+                        <div className="flex items-center">
+                          <span className="text-xs text-gray-600 w-8 print:text-xs">LEFT</span>
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              name="tire_pressure.rear_left_in"
+                              value={editForm.tire_pressure.rear_left_in}
+                              onChange={handleInputChange}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                          ) : (
+                            <p className="text-sm font-semibold print:text-xs">{repair.tire_pressure.rear_left_in}</p>
+                          )}
+                          <span className="text-xs text-gray-600 ml-1 print:text-xs">PSI</span>
+                        </div>
+                        <div className="flex items-center">
+                          <span className="text-xs text-gray-600 w-8 print:text-xs">RIGHT</span>
+                          {isEditing ? (
+                            <input
+                              type="number"
+                              name="tire_pressure.rear_right_in"
+                              value={editForm.tire_pressure.rear_right_in}
+                              onChange={handleInputChange}
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                          ) : (
+                            <p className="text-sm font-semibold print:text-xs">{repair.tire_pressure.rear_right_in}</p>
+                          )}
+                          <span className="text-xs text-gray-600 ml-1 print:text-xs">PSI</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
