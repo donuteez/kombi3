@@ -24,7 +24,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
     ro_number: '',
     customer_first_name: '',
     customer_last_name: '',
-    vehicle_mileage: '',
+    vehicle_mileage_in: '',
+    vehicle_mileage_out: '',
     customer_concern: '',
     recommendations: '',
     shop_recommendations: '',
@@ -92,7 +93,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
             ro_number: data.ro_number,
             customer_first_name: data.customer_first_name || '',
             customer_last_name: data.customer_last_name || '',
-            vehicle_mileage: data.vehicle_mileage?.toString() || '',
+            vehicle_mileage_in: data.vehicle_mileage_in?.toString() || '',
+            vehicle_mileage_out: data.vehicle_mileage_out?.toString() || '',
             customer_concern: data.customer_concern || '',
             recommendations: data.recommendations || '',
             shop_recommendations: data.shop_recommendations || '',
@@ -214,7 +216,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
         ro_number: form.ro_number.trim(),
         customer_first_name: form.customer_first_name.trim() || null,
         customer_last_name: form.customer_last_name.trim() || null,
-        vehicle_mileage: form.vehicle_mileage ? parseInt(form.vehicle_mileage) : null,
+        vehicle_mileage_in: form.vehicle_mileage_in ? parseInt(form.vehicle_mileage_in) : null,
+        vehicle_mileage_out: form.vehicle_mileage_out ? parseInt(form.vehicle_mileage_out) : null,
         customer_concern: form.customer_concern.trim(),
         recommendations: form.recommendations.trim(),
         shop_recommendations: form.shop_recommendations.trim(),
@@ -332,7 +335,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Technician, RO Number, and Vehicle Mileage */}
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-4 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Technician Name <span className="text-red-500">*</span>
@@ -361,12 +364,24 @@ export const RepairForm: React.FC<RepairFormProps> = ({ onComplete, editId }) =>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Vehicle Mileage
+                Vehicle Mileage In
               </label>
               <input
                 type="number"
-                name="vehicle_mileage"
-                value={form.vehicle_mileage}
+                name="vehicle_mileage_in"
+                value={form.vehicle_mileage_in}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Vehicle Mileage Out
+              </label>
+              <input
+                type="number"
+                name="vehicle_mileage_out"
+                value={form.vehicle_mileage_out}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />

@@ -174,7 +174,8 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
                   <SortableHeader field="ro_number" label="RO Number" />
                   <SortableHeader field="technician_name" label="Technician" />
                   <SortableHeader field="created_at" label="Date" />
-                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mileage</th>
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mileage In</th>
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mileage Out</th>
                   <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Has Diagnostic</th>
                   <th className="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
@@ -186,7 +187,8 @@ export const RepairList: React.FC<RepairListProps> = ({ onViewDetail }) => {
                     <td className="py-3 px-4 whitespace-nowrap">{repair.ro_number}</td>
                     <td className="py-3 px-4 whitespace-nowrap">{repair.technician_name}</td>
                     <td className="py-3 px-4 whitespace-nowrap">{formatDate(repair.created_at)}</td>
-                    <td className="py-3 px-4 whitespace-nowrap">{repair.vehicle_mileage || '—'}</td>
+                    <td className="py-3 px-4 whitespace-nowrap">{repair.vehicle_mileage_in?.toLocaleString() || '—'}</td>
+                    <td className="py-3 px-4 whitespace-nowrap">{repair.vehicle_mileage_out?.toLocaleString() || '—'}</td>
                     <td className="py-3 px-4 whitespace-nowrap">
                       {repair.diagnostic_file_id ? (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">

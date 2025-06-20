@@ -5,7 +5,8 @@ export interface RepairSheet {
   ro_number: string;
   customer_first_name?: string;
   customer_last_name?: string;
-  vehicle_mileage?: number;
+  vehicle_mileage_in?: number;
+  vehicle_mileage_out?: number;
   customer_concern?: string;
   recommendations?: string;
   shop_recommendations?: string;

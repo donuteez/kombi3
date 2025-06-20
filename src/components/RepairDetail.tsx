@@ -513,15 +513,37 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
               <div>
                 <label className="block text-sm font-medium text-gray-700">Vehicle Mileage</label>
                 {isEditing ? (
-                  <input
-                    type="number"
-                    name="vehicle_mileage"
-                    value={editForm.vehicle_mileage || ''}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  />
+                  <div className="space-y-2">
+                    <div>
+                      <label className="block text-xs text-gray-500">In</label>
+                      <input
+                        type="number"
+                        name="vehicle_mileage_in"
+                        value={editForm.vehicle_mileage_in || ''}
+                        onChange={handleInputChange}
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500">Out</label>
+                      <input
+                        type="number"
+                        name="vehicle_mileage_out"
+                        value={editForm.vehicle_mileage_out || ''}
+                        onChange={handleInputChange}
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
                 ) : (
-                  <p className="mt-1">{repair.vehicle_mileage?.toLocaleString() || '—'}</p>
+                  <div className="mt-1">
+                    <div className="text-sm">
+                      <span className="text-gray-500">In:</span> {repair.vehicle_mileage_in?.toLocaleString() || '—'}
+                    </div>
+                    <div className="text-sm">
+                      <span className="text-gray-500">Out:</span> {repair.vehicle_mileage_out?.toLocaleString() || '—'}
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
