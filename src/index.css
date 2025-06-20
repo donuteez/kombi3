@@ -35,4 +35,42 @@
   .bg-white {
     box-shadow: none !important;
   }
+
+  /* Diagnostic file print styles */
+  .print-diagnostic-file {
+    display: none;
+    page-break-before: always;
+    margin: 0;
+    padding: 20px;
+    background: white;
+  }
+
+  /* Show diagnostic file section only when printing */
+  @media print {
+    .print-diagnostic-file {
+      display: block !important;
+    }
+  }
+
+  /* Ensure diagnostic file content is readable when printed */
+  .print-diagnostic-file pre {
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+
+  /* Diagnostic file heading styles for print */
+  .print-diagnostic-file h2 {
+    font-size: 16px !important;
+    margin-bottom: 16px !important;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 8px;
+  }
 }

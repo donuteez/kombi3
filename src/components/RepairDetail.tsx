@@ -17,6 +17,7 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [fileContent, setFileContent] = useState<string | null>(null);
+  const [diagnosticFilePrintContent, setDiagnosticFilePrintContent] = useState<string | null>(null);
   const [showFileViewer, setShowFileViewer] = useState(false);
   const [editForm, setEditForm] = useState<RepairSheet | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -70,6 +71,24 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
         
         setRepair(repairData);
         setEditForm(repairData);
+
+        // Fetch diagnostic file content for printing if it exists
+        if (repairData.diagnostic_file_id) {
+          try {
+            const { data: fileData, error: fileError } = await supabase.storage
+              .from('diagnostic-files')
+              .download(repairData.diagnostic_file_id);
+              
+            if (fileError) {
+              console.error('Failed to download diagnostic file for printing:', fileError);
+            } else {
+              const text = await fileData.text();
+              setDiagnosticFilePrintContent(text);
+            }
+          } catch (fileError) {
+            console.error('Error fetching diagnostic file for printing:', fileError);
+          }
+        }
       } catch (error) {
         showToast({
           id: Date.now().toString(),
@@ -229,6 +248,14 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           diagnostic_file_id: fileUploadData.path,
           diagnostic_file_name: newDiagnosticFile.name
         };
+
+        // Update diagnostic file print content with new file
+        try {
+          const text = await newDiagnosticFile.text();
+          setDiagnosticFilePrintContent(text);
+        } catch (error) {
+          console.error('Failed to read new diagnostic file for printing:', error);
+        }
       }
 
       const { error } = await supabase
@@ -949,6 +976,20 @@ export const RepairDetail: React.FC<RepairDetailProps> = ({ repairId, onBack }) 
           </div>
         </div>
       </div>
+
+      {/* Diagnostic File Print Section - Only visible when printing */}
+      {diagnosticFilePrintContent && (
+        <div className="print-diagnostic-file">
+          <div className="bg-white p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Diagnostic File: {repair.diagnostic_file_name || 'diagnostic.txt'}
+            </h2>
+            <pre className="whitespace-pre-wrap break-words text-sm font-mono bg-white border border-gray-200 rounded-md p-4 print:max-h-full print:overflow-visible print:border-none print:p-0 print:text-xs print:leading-tight">
+              {diagnosticFilePrintContent}
+            </pre>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
